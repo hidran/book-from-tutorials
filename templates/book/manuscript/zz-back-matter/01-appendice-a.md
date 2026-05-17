@@ -1,17 +1,17 @@
-## Appendice A — Glossario
+## Appendix A — Glossary
 
-Termini ricorrenti nel libro, organizzati alfabeticamente.
+Recurring terms in the book, organized alphabetically.
 
 ### A
 
-**[Termine]** — [Definizione breve]. Approfondimento: Cap. N.
+**[Term]** — [Short definition]. Deep dive: Chapter N.
 
 ### B
 
-**[Termine]** — [Definizione].
+**[Term]** — [Definition].
 
-[... continua A-Z con i termini chiave del tuo dominio ...]
+[... continue A-Z with the key terms of your domain ...]
 
 ### Z
 
-**[Termine]** — [Definizione].
+**[Term]** — [Definition].

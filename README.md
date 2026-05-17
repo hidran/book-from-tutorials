@@ -1,180 +1,181 @@
 # 📕 Book from Tutorials
 
-**Trasforma una serie di video tutorial in un libro vendibile su Amazon Kindle** — pipeline completa: video → trascrizione → articoli → capitoli → EPUB + paperback → KDP.
+**Turn a series of video tutorials into a sellable Amazon Kindle book** — complete pipeline: videos → transcripts → articles → chapters → EPUB + paperback → KDP.
 
-Questo toolkit nasce dall'esperienza reale di pubblicare *Claude Code: la guida pratica* — un libro di ~98.000 parole, 16 capitoli, 5 appendici, edizioni IT + EN — partendo da 40 video Camtasia.
-
----
-
-## 🎯 Cosa ottieni
-
-Dato un set di video tutorial come input, alla fine del processo hai:
-
-- **EPUB validato** (passa `epubcheck`, pronto per Kindle)
-- **DOCX impaginabile** in Word per il paperback POD
-- **Edizioni multilingua** (es. italiano + inglese) condividendo le stesse figure
-- **Companion repos GitHub** mappati capitolo per capitolo
-- **Metadati KDP completi** (titolo, sottotitolo, descrizione HTML, categorie, keyword) copia-incollabili nel form Amazon
-
-Tempo realistico per un libro di ~400 pagine partendo da 40 video: **~80h di lavoro umano**, di cui ~30% gestione + 70% lavoro AI-assistito.
+This toolkit is distilled from the real-world production of *Claude Code: The Practical Guide* — a ~98,000 word book, 16 chapters, 5 appendices, IT + EN editions — starting from 40 Camtasia videos.
 
 ---
 
-## 🧠 Filosofia: AI-assisted, human-directed
+## 🎯 What you get
 
-Il principio guida è **non delegare la comprensione** all'AI. L'AI scrive, organizza, traduce. Tu decidi:
-- Cosa va in che capitolo
-- Quando un capitolo è "abbastanza"
-- Quali screenshot sono significativi
-- Quale tono mantenere
-- Cosa vendere e come
+Given a set of video tutorials as input, at the end of the process you have:
 
-Il toolkit incarna questa divisione del lavoro: prompt strutturati, subagent dispatching, e checkpoint umani in punti chiave (selezione screenshot, QA su Kindle Previewer, scelta copertina).
+- **Validated EPUB** (passes `epubcheck`, ready for Kindle)
+- **Layout-ready DOCX** for Word paperback POD
+- **Multi-language editions** (e.g., Italian + English) sharing the same figures
+- **GitHub companion repos** mapped chapter-by-chapter
+- **Complete KDP metadata** (title, subtitle, HTML description, categories, keywords) copy-pasteable into the Amazon form
+
+Realistic time for a ~400-page book starting from 40 videos: **~80 hours of human work**, of which ~30% coordination + 70% AI-assisted work.
+
+---
+
+## 🧠 Philosophy: AI-assisted, human-directed
+
+The guiding principle is **do not delegate understanding** to AI. AI writes, organizes, translates. You decide:
+
+- What goes in which chapter
+- When a chapter is "enough"
+- Which screenshots are meaningful
+- What voice to maintain
+- What to sell and how
+
+The toolkit encodes this division of labor: structured prompts, subagent dispatching, and human checkpoints at key moments (screenshot selection, Kindle Previewer QA, cover design).
 
 ---
 
 ## 🚀 Quick start
 
-### Prerequisiti
+### Prerequisites
 
 ```bash
 # macOS via Homebrew
 brew install pandoc ffmpeg epubcheck
-brew install --cask kindle-previewer  # opzionale ma raccomandato
+brew install --cask kindle-previewer  # optional but recommended
 
 # Linux
 sudo apt install pandoc ffmpeg
 # epubcheck: https://github.com/w3c/epubcheck/releases
-# Kindle Previewer: solo macOS/Windows
+# Kindle Previewer: macOS/Windows only
 ```
 
-Hai bisogno anche di **Claude Code** installato (`npm install -g @anthropic-ai/claude-code`).
+You also need **Claude Code** installed (`npm install -g @anthropic-ai/claude-code`).
 
-### Crea il tuo primo libro
+### Create your first book
 
 ```bash
-# 1. Clona questo repo
+# 1. Clone this repo
 git clone https://github.com/hidran/book-from-tutorials.git
 cd book-from-tutorials
 
-# 2. Bootstrap un nuovo libro nella tua cartella di lavoro
-./scripts/setup-book-repo.sh ~/my-book "Il mio libro" "Hidran Arias" it-IT
+# 2. Bootstrap a new book in your working directory
+./scripts/setup-book-repo.sh ~/my-book "My Book Title" "Your Name" en-US
 cd ~/my-book
 
-# 3. Metti i tuoi video .mp4 in videos/
+# 3. Drop your .mp4 videos in videos/
 
-# 4. Trascrivi (richiede Whisper o trascrizioni esistenti)
+# 4. Transcribe (requires Whisper installed, or pre-existing transcripts)
 ./scripts/transcribe-batch.sh videos/ transcripts/
 
-# 5. Usa Claude Code per trasformare trascrizioni in articoli
-# (segue il workflow in docs/02-writing-with-claude.md)
+# 5. Use Claude Code to turn transcripts into articles
+# (follow the workflow in docs/02-writing-with-claude.md)
 claude
-# > "Leggi transcripts/lezione-01.txt e crealo come articolo Markdown in articles/PE-01-intro.md"
+# > "Read transcripts/lesson-01.txt and write it as a Markdown article in articles/PE-01-intro.md"
 
-# 6. Usa Claude Code per scrivere i capitoli (vedi docs/02-writing-with-claude.md)
+# 6. Use Claude Code to write chapters (see docs/02-writing-with-claude.md)
 
-# 7. Estrai screenshot dai video
-./scripts/extract-frames.sh videos/lezione-01.mp4 figures/raw/cap-01 00:01:30 00:05:00
+# 7. Extract screenshots from the videos
+./scripts/extract-frames.sh videos/lesson-01.mp4 figures/raw/cap-01 00:01:30 00:05:00
 
 # 8. Build EPUB + DOCX
 ./scripts/build-epub.sh
 ./scripts/build-paperback.sh
 ./scripts/validate.sh
 
-# 9. Upload su KDP usando i metadata in AMAZON-LISTING.md
+# 9. Upload to KDP using the metadata in AMAZON-LISTING.md
 ```
 
-Tempo totale prima EPUB di prova: **~2 ore** se hai già trascrizioni + 1 video di esempio.
+Total time to your first test EPUB: **~2 hours** if you already have transcripts + 1 sample video.
 
 ---
 
-## 📚 Documentazione
+## 📚 Documentation
 
-| Doc | Contenuto |
+| Doc | Content |
 |---|---|
-| [docs/01-pipeline.md](docs/01-pipeline.md) | Pipeline tecnica: video → trascrizione → articolo → capitolo → EPUB |
-| [docs/02-writing-with-claude.md](docs/02-writing-with-claude.md) | Pattern subagent-driven, anatomia capitolo, prompt riusabili |
-| [docs/03-screenshots.md](docs/03-screenshots.md) | Workflow ffmpeg + selezione + sostituzione placeholder |
-| [docs/04-build-and-publish.md](docs/04-build-and-publish.md) | Build pandoc, validazione epubcheck, impaginazione paperback Word |
-| [docs/05-multi-edition.md](docs/05-multi-edition.md) | Edizioni IT + EN parallele con figure condivise via symlink |
+| [docs/01-pipeline.md](docs/01-pipeline.md) | Technical pipeline: video → transcript → article → chapter → EPUB |
+| [docs/02-writing-with-claude.md](docs/02-writing-with-claude.md) | Subagent-driven pattern, chapter anatomy, reusable prompts |
+| [docs/03-screenshots.md](docs/03-screenshots.md) | ffmpeg workflow + selection + placeholder replacement |
+| [docs/04-build-and-publish.md](docs/04-build-and-publish.md) | Pandoc build, epubcheck validation, Word paperback layout, KDP upload |
+| [docs/05-multi-edition.md](docs/05-multi-edition.md) | Parallel IT + EN editions with figures shared via symlinks |
 
 ---
 
-## 📁 Struttura del repo
+## 📁 Repo structure
 
 ```
 book-from-tutorials/
-├── README.md                            ← sei qui
+├── README.md                            ← you are here
 ├── LICENSE                              ← MIT
-├── docs/                                ← 5 guide approfondite del workflow
+├── docs/                                ← 5 in-depth workflow guides
 ├── scripts/                             ← pipeline scripts
-│   ├── setup-book-repo.sh               ← bootstrap nuovo libro
+│   ├── setup-book-repo.sh               ← bootstrap a new book
 │   ├── transcribe-batch.sh              ← Whisper batch
-│   ├── extract-frames.sh                ← ffmpeg screenshot
+│   ├── extract-frames.sh                ← ffmpeg screenshots
 │   ├── build-epub.sh                    ← pandoc → EPUB3
 │   ├── build-paperback.sh               ← pandoc → DOCX
 │   └── validate.sh                      ← epubcheck wrapper
 └── templates/
-    ├── book/                            ← skeleton di un nuovo libro
+    ├── book/                            ← skeleton of a new book
     │   ├── .gitignore
     │   ├── README.md
     │   ├── manuscript/
-    │   │   ├── 00-front-matter/         ← copertina, frontespizio, copyright, prefazione, come leggere
-    │   │   ├── parte-1/cap-01.md        ← template capitolo
-    │   │   └── zz-back-matter/          ← appendici (zz- per sort dopo parte-N)
+    │   │   ├── 00-front-matter/         ← cover, title page, copyright, preface, how-to-read
+    │   │   ├── parte-1/cap-01.md        ← chapter template
+    │   │   └── zz-back-matter/          ← appendices (zz- to sort after parte-N)
     │   └── styles/
-    │       ├── kindle.css               ← CSS per EPUB
+    │       ├── kindle.css               ← CSS for EPUB
     │       └── metadata.yaml.template   ← pandoc metadata
-    ├── prompts/                         ← prompt templates per Claude Code
+    ├── prompts/                         ← prompt templates for Claude Code
     │   ├── transcript-to-article.md
     │   ├── article-to-chapter.md
     │   ├── chapter-expansion.md
     │   └── translate-chapter.md
     └── plans/
-        └── plan-pilot-template.md       ← template piano di esecuzione
+        └── plan-pilot-template.md       ← execution plan template
 ```
 
 ---
 
-## 🎓 Storia di origine
+## 🎓 Origin story
 
-Questo toolkit è il distillato del workflow utilizzato per produrre **Claude Code: la guida pratica** (2026, ~390 pagine, IT + EN su KDP). Le scelte tecniche sono il frutto di iterazione reale, non di teoria:
+This toolkit is the distillate of the workflow used to produce **Claude Code: The Practical Guide** (2026, ~390 pages, IT + EN on KDP). Technical choices come from real iteration, not theory:
 
-- **Pandoc 3.x** invece di soluzioni custom (battle-tested per EPUB)
-- **`zz-back-matter/`** invece di `99-back-matter/` (perché `9` < `p` in ASCII sort)
-- **Symlink delle figure** tra edizioni (no duplicazione di MB di PNG)
-- **Subagent in waves di 4** per scrivere capitoli in parallelo
-- **HTML comment `<!-- FIGURE: ... -->`** come placeholder (no rotture pandoc)
-- **Branch GitHub `book/cap-N-stage`** per snapshot didattici nei companion repo
-
----
-
-## 🤝 Contributi
-
-PR benvenute. Cose dove serve aiuto:
-
-- [ ] Script per Windows (i `.sh` attuali sono Bash/zsh — porting PowerShell utile)
-- [ ] Template per altre lingue (DE, FR, ES, PT)
-- [ ] Variante con Marp/Quarto invece di pandoc per build alternative
-- [ ] Esempi mini-book funzionanti (a partire da video pubblici Creative Commons)
-- [ ] Integration tests della pipeline build
-
-Apri una issue prima di lavori grossi per discutere.
+- **Pandoc 3.x** instead of custom solutions (battle-tested for EPUB)
+- **`zz-back-matter/`** instead of `99-back-matter/` (because `9` < `p` in ASCII sort)
+- **Symlinked figures** between editions (no MB-duplication of PNG files)
+- **Subagent waves of 4** to write chapters in parallel
+- **HTML comment `<!-- FIGURE: ... -->`** as placeholder (no pandoc breakage)
+- **GitHub branches `book/cap-N-stage`** for didactic snapshots in companion repos
 
 ---
 
-## 📜 Licenza
+## 🤝 Contributing
 
-MIT — riusa liberamente, attribuzione gradita.
+PRs welcome. Areas where help is appreciated:
+
+- [ ] Windows scripts (current `.sh` files are Bash/zsh — PowerShell port useful)
+- [ ] Templates for other languages (DE, FR, ES, PT)
+- [ ] Variant with Marp/Quarto instead of pandoc for alternative builds
+- [ ] Working mini-book examples (starting from public Creative Commons videos)
+- [ ] Integration tests for the build pipeline
+
+Open an issue before large changes to discuss.
 
 ---
 
-## 🔗 Vedi anche
+## 📜 License
 
-- 📖 **Claude Code: la guida pratica** (libro originale): https://www.amazon.it/dp/...
-- 🎓 **Claude Code: The Practical Guide** (EN edition): https://www.amazon.com/dp/...
-- 💬 **Discord community** (Claude Code Italia): link al lancio
+MIT — reuse freely, attribution appreciated.
 
 ---
 
-**Aggiornato:** 2026-05-18 · Autore: Hidran Arias
+## 🔗 See also
+
+- 📖 **Claude Code: la guida pratica** (Italian original): https://www.amazon.it/dp/...
+- 🎓 **Claude Code: The Practical Guide** (English edition): https://www.amazon.com/dp/...
+- 💬 **Discord community** (Claude Code): link at launch
+
+---
+
+**Updated:** 2026-05-18 · Author: Hidran Arias

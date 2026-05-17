@@ -1,30 +1,30 @@
 #!/usr/bin/env bash
-# Batch transcription dei video MP4 in trascrizioni TXT usando OpenAI Whisper.
+# Batch transcription of MP4 videos to TXT transcripts using OpenAI Whisper.
 #
-# Uso:
+# Usage:
 #   ./transcribe-batch.sh <videos_dir> <transcripts_dir> [model] [language]
 #
-# Esempio:
+# Example:
 #   ./transcribe-batch.sh videos/ transcripts/ medium Italian
 #   ./transcribe-batch.sh videos/ transcripts/ large-v3 English
 #
-# Requisiti:
+# Requirements:
 #   pip install -U openai-whisper
-#   (oppure usa whisper-cpp / mlx-whisper / faster-whisper se preferisci)
+#   (or use whisper-cpp / mlx-whisper / faster-whisper if you prefer)
 #
-# Salta video già trascritti (idempotente).
+# Skips already-transcribed videos (idempotent).
 
 set -euo pipefail
 
 if [[ $# -lt 2 ]]; then
-  echo "Uso: $0 <videos_dir> <transcripts_dir> [model=medium] [language=Italian]" >&2
+  echo "Usage: $0 <videos_dir> <transcripts_dir> [model=medium] [language=Italian]" >&2
   echo "" >&2
-  echo "Models disponibili (qualità → velocità):" >&2
-  echo "  tiny   - veloce, bassa qualità (~1x realtime)" >&2
-  echo "  base   - buon compromesso (~2x realtime)" >&2
-  echo "  small  - qualità media (~3x realtime)" >&2
-  echo "  medium - qualità alta (~5x realtime) ← default" >&2
-  echo "  large-v3 - qualità migliore (~10x realtime, richiede GPU)" >&2
+  echo "Models available (quality → speed):" >&2
+  echo "  tiny   - fast, low quality (~1x realtime)" >&2
+  echo "  base   - good compromise (~2x realtime)" >&2
+  echo "  small  - medium quality (~3x realtime)" >&2
+  echo "  medium - high quality (~5x realtime) ← default" >&2
+  echo "  large-v3 - best quality (~10x realtime, requires GPU)" >&2
   exit 1
 fi
 
@@ -72,15 +72,15 @@ for video in "$VIDEOS_DIR"/*.mp4 "$VIDEOS_DIR"/*.MP4 "$VIDEOS_DIR"/*.mov; do
 
   if [[ -f "$txt_out" ]]; then
     words=$(wc -w < "$txt_out" | xargs)
-    echo "   ✓ Done — $words parole in $txt_out"
+    echo "   ✓ Done — $words words in $txt_out"
     COUNT=$((COUNT + 1))
   else
-    echo "   ✗ Failed — $txt_out non creato" >&2
+    echo "   ✗ Failed — $txt_out not created" >&2
   fi
 done
 
 echo ""
 echo "=== Summary ==="
-echo "Trascritti: $COUNT"
-echo "Saltati (già esistenti): $SKIPPED"
+echo "Transcribed: $COUNT"
+echo "Skipped (already exist): $SKIPPED"
 echo "Output in: $TRANSCRIPTS_DIR"

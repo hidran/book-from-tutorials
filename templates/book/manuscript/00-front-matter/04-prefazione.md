@@ -1,23 +1,23 @@
-## Prefazione
+## Preface
 
-### Perché questo libro
+### Why this book
 
-[Inserisci qui il motivo personale che ti ha spinto a scrivere il libro. Aneddoto reale, problema risolto, gap di mercato visto.]
+[Share the personal reason that led you to write this book. A real anecdote, a problem you solved, a gap you noticed in the market.]
 
-### Per chi è questo libro
+### Who this book is for
 
-[Chi è il lettore ideale. Pre-requisiti onesti. Chi NON dovrebbe leggerlo.]
+[Describe the ideal reader. Honest prerequisites. Who should NOT read it.]
 
-### Come è organizzato
+### How it's organized
 
-[Walkthrough narrativo delle Parti del libro.]
+[Narrative walkthrough of the book's parts.]
 
-### Cosa cambierà mentre leggi
+### What will change as you read
 
-[Disclaimer onesto su evoluzione del tema (es. tool che cambia rapidamente). Quanto durerà il libro.]
+[An honest disclaimer about how quickly the subject matter evolves (e.g., tools that change rapidly). How long the book is expected to remain relevant.]
 
-### Ringraziamenti
+### Acknowledgments
 
-[Lista breve di chi ringraziare: collaboratori, beta reader, famiglia.]
+[A short list of people to thank: collaborators, beta readers, family.]
 
-— [Nome autore], [Mese Anno]
+— [Author name], [Month Year]

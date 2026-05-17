@@ -1,109 +1,109 @@
-# Prompt template: Trascrizione → Articolo Markdown
+# Prompt template: Transcript → Markdown Article
 
-Copia questo prompt in Claude Code per trasformare una trascrizione grezza in un articolo Markdown leggibile.
+Copy this prompt into Claude Code to transform a raw transcript into a readable Markdown article.
 
 ---
 
-## Variabili da sostituire
+## Variables to substitute
 
-- `<TRANSCRIPT_PATH>` — path del file `.txt` della trascrizione
-- `<OUTPUT_PATH>` — path dove salvare l'articolo `.md`
-- `<TITLE_HINT>` — titolo provvisorio dell'articolo (sarà l'H1)
-- `<LANGUAGE>` — lingua dell'articolo (es. "italiano", "American English")
+- `<TRANSCRIPT_PATH>` — path to the transcript `.txt` file
+- `<OUTPUT_PATH>` — path where the `.md` article will be saved
+- `<TITLE_HINT>` — working title of the article (will become the H1)
+- `<LANGUAGE>` — language of the article (e.g. "American English", "Italian")
 
 ---
 
 ## Prompt
 
 ```
-Trasforma la trascrizione grezza in <TRANSCRIPT_PATH> in un articolo Markdown pulito
-e leggibile, e salvalo in <OUTPUT_PATH>.
+Transform the raw transcript in <TRANSCRIPT_PATH> into a clean, readable Markdown article
+and save it to <OUTPUT_PATH>.
 
-## Regole di trasformazione
+## Transformation rules
 
-1. RIMUOVI:
-   - Disfluenze del parlato ("ehm", "diciamo", "allora", "ok", ripetizioni)
-   - Frasi mai concluse o che cambiano direzione a metà
-   - Riferimenti a slide non visibili al lettore ("come vedete qui", "in questa schermata")
-   - Sigle / saluti / chiusure tipiche dei video ("ciao a tutti", "ci vediamo nella prossima")
+1. REMOVE:
+   - Speech disfluencies ("uh", "um", "so", "okay", repetitions)
+   - Unfinished sentences or ones that change direction mid-way
+   - References to slides the reader cannot see ("as you can see here", "on this screen")
+   - Intros / greetings / outros typical of videos ("hey everyone", "see you in the next one")
 
-2. CONSERVA:
-   - Comandi shell, snippet di codice, output di terminale (precisi al carattere)
-   - Esempi concreti
-   - Nomi propri (prodotti, persone, framework)
-   - L'opinione e le decisioni dell'autore
-   - Aneddoti che danno valore
+2. PRESERVE:
+   - Shell commands, code snippets, terminal output (character-perfect)
+   - Concrete examples
+   - Proper nouns (products, people, frameworks)
+   - The author's opinions and decisions
+   - Anecdotes that add value
 
-3. RISTRUTTURA:
-   - Aggiungi heading H2 per ogni macro-argomento (3-7 sezioni per articolo)
-   - Spezza paragrafi lunghi in paragrafi 2-4 righe
-   - Numero step in liste ordinate quando ci sono passaggi sequenziali
-   - Bullet list per enumerazioni
-   - Inline code per nomi di file, comandi, identificatori
+3. RESTRUCTURE:
+   - Add H2 headings for each macro-topic (3–7 sections per article)
+   - Break long paragraphs into 2–4 line paragraphs
+   - Number steps in ordered lists when there are sequential actions
+   - Bullet lists for enumerations
+   - Inline code for file names, commands, identifiers
 
-4. TONO:
-   - <LANGUAGE>, seconda persona ("tu apri il terminale", non "si apre il terminale")
-   - Diretto e pratico, senza fronzoli
-   - Conserva la voce dell'autore (non rendere "accademico" un autore che è "diretto")
+4. TONE:
+   - <LANGUAGE>, second person ("you open the terminal", not "one opens the terminal")
+   - Direct and practical, no filler
+   - Preserve the author's voice (don't make a "straight-talking" author sound "academic")
 
-## Struttura dell'articolo
+## Article structure
 
 ```markdown
 ---
 title: "<TITLE_HINT>"
-subtitle: "[se utile]"
-author: "[nome autore]"
+subtitle: "[if useful]"
+author: "[author name]"
 ---
 
 # <TITLE_HINT>
 
-## Introduzione
+## Introduction
 
-[1-2 paragrafi: cosa fa questo articolo, cosa imparerà il lettore]
+[1–2 paragraphs: what this article covers, what the reader will learn]
 
-## [Sezione 1: macro-argomento]
+## [Section 1: macro topic]
 
-[corpo]
+[body]
 
-## [Sezione 2: macro-argomento]
+## [Section 2: macro topic]
 
-[corpo]
+[body]
 
 ...
 
-## Takeaway
+## Takeaways
 
 - [bullet 1]
 - [bullet 2]
 - [bullet 3]
 
 ---
-*Prossimo argomento: [accenno breve]*
+*Next topic: [brief hint]*
 ```
 
-## Vincoli
+## Constraints
 
-- Lunghezza target: 1200-1800 parole (depending on transcript length)
-- Non inventare contenuto che non è nella trascrizione
-- Se la trascrizione contiene errori tecnici evidenti (es. "Phyton" invece di "Python"),
-  correggili silenziosamente
-- Se trovi qualcosa di ambiguo, contrassegnalo con `<!-- TODO: verificare -->`
+- Target length: 1200–1800 words (depending on transcript length)
+- Do not invent content that is not in the transcript
+- If the transcript contains obvious technical errors (e.g. "Phyton" instead of "Python"),
+  fix them silently
+- If you find something ambiguous, flag it with `<!-- TODO: verify -->`
 
 ## Output
 
-Salva direttamente in <OUTPUT_PATH>. Riporta:
-- Word count finale
-- Numero sezioni H2
-- Eventuali TODO inseriti
-- Suggerimento per il prossimo articolo (cosa potrebbe seguire logicamente)
+Save directly to <OUTPUT_PATH>. Report:
+- Final word count
+- Number of H2 sections
+- Any TODOs inserted
+- Suggestion for the next article (what could logically follow)
 ```
 
 ---
 
-## Note d'uso
+## Usage notes
 
-**Per Whisper output**: Whisper tipicamente produce testo senza punteggiatura forte. Aggiungi al prompt: "Aggiungi punteggiatura corretta dove manca (Whisper la omette spesso)".
+**For Whisper output**: Whisper typically produces text with little or no punctuation. Add to the prompt: "Add correct punctuation where missing (Whisper often omits it)".
 
-**Per Audiate output**: Audiate divide bene in frasi ma può lasciare disfluenze. Aggiungi: "Rimuovi disfluenze ma rispetta la struttura delle frasi già presente".
+**For Audiate output**: Audiate splits into sentences well but may leave disfluencies. Add: "Remove disfluencies but respect the sentence structure already present".
 
-**Quality check**: dopo che Claude scrive l'articolo, **leggilo tutto**. Se in 5 minuti di lettura non trovi nulla che ti sembri "non come l'avresti detto tu", l'articolo è pronto. Se trovi 3+ cose, dispatcha un round di refinement con feedback specifico.
+**Quality check**: after Claude writes the article, **read the whole thing**. If in 5 minutes of reading you don't find anything that feels "not how you would have said it", the article is ready. If you find 3+ things, dispatch a refinement round with specific feedback.

@@ -1,50 +1,50 @@
-# 05 · Edizioni multilingua
+# 05 · Multi-Language Editions
 
-Pubblicare la stessa opera in più lingue (es. IT + EN) condividendo asset (figure, build pipeline) e mantenendo manuscript separati.
+Publish the same work in multiple languages (e.g., IT + EN) by sharing assets (figures, build pipeline) while keeping separate manuscripts.
 
 ---
 
-## Struttura raccomandata
+## Recommended structure
 
 ```
 my-book/
-├── book/                          ← edizione primaria (es. italiana)
+├── book/                          ← primary edition (e.g., Italian)
 │   ├── manuscript/
-│   ├── figures/                   ← CANONICA: qui vivono le PNG reali
+│   ├── figures/                   ← CANONICAL: this is where real PNGs live
 │   ├── styles/  (kindle.css + metadata.yaml IT)
 │   ├── scripts/
 │   └── build/
-├── book-en/                       ← edizione secondaria (es. inglese)
-│   ├── manuscript/                ← traduzioni
-│   ├── figures/                   ← SYMLINK a ../book/figures/cap-NN
+├── book-en/                       ← secondary edition (e.g., English)
+│   ├── manuscript/                ← translations
+│   ├── figures/                   ← SYMLINK to ../book/figures/cap-NN
 │   ├── styles/  (kindle.css + metadata.yaml EN)
-│   ├── scripts/                   ← stessi script
+│   ├── scripts/                   ← same scripts
 │   └── build/
-└── AMAZON-LISTING.md              ← metadata KDP per ENTRAMBE le edizioni
+└── AMAZON-LISTING.md              ← KDP metadata for BOTH editions
 ```
 
-**Insight chiave**: le figure (screenshot) sono **language-neutral** nella maggioranza dei casi (terminali, codice, diagrammi). Non duplicarle: usa symlink.
+**Key insight**: figures (screenshots) are **language-neutral** in the vast majority of cases (terminals, code, diagrams). Don't duplicate them — use symlinks.
 
 ---
 
-## Setup edizione secondaria
+## Secondary edition setup
 
 ```bash
 cd my-book
 mkdir -p book-en/manuscript/{00-front-matter,parte-1,parte-2,zz-back-matter}
 mkdir -p book-en/{figures,styles,scripts,build}
 
-# Copia gli script (sono identici)
+# Copy the scripts (they are identical)
 cp book/scripts/*.sh book-en/scripts/
 
-# Copia CSS (uguale per entrambe le edizioni)
+# Copy CSS (same for both editions)
 cp book/styles/kindle.css book-en/styles/
 
-# Metadata EN: copia + traduci titolo/sottotitolo/descrizione
+# EN metadata: copy + translate title/subtitle/description
 cp book/styles/metadata.yaml book-en/styles/metadata.yaml
-# Apri ed edita: title, subtitle, language: en-US, etc.
+# Open and edit: title, subtitle, language: en-US, etc.
 
-# Figure: symlink (NO copia)
+# Figures: symlink (NO copy)
 for n in $(seq -f "%02g" 1 16); do
   ln -s "../../book/figures/cap-$n" "book-en/figures/cap-$n"
 done
@@ -52,57 +52,57 @@ done
 # .gitignore
 cp book/.gitignore book-en/.gitignore
 
-# Git init separato
+# Separate git init
 cd book-en && git init && git config user.name "..." && git config user.email "..."
-xattr -w com.dropbox.ignored 1 .git  # se in Dropbox
+xattr -w com.dropbox.ignored 1 .git  # if on Dropbox
 ```
 
 ---
 
-## Workflow traduzione
+## Translation workflow
 
-Usa subagent paralleli (vedi `templates/prompts/translate-chapter.md`).
+Use parallel subagents (see `templates/prompts/translate-chapter.md`).
 
-Wave tipico per 16 capitoli + front matter + 5 appendici:
+Typical wave breakdown for 16 chapters + front matter + 5 appendices:
 
-| Wave | Contenuti | Subagent paralleli | Tempo |
+| Wave | Contents | Parallel subagents | Time |
 |---|---|---|---|
-| 1 | Front matter + cap. 1-3 | 4 | ~10 min |
-| 2 | Cap. 4-7 | 4 | ~15 min |
-| 3 | Cap. 8-11 | 4 | ~20 min |
-| 4 | Cap. 12-15 | 4 | ~20 min |
-| 5 | Cap. 16 + appendici A+B + C+D+E | 3 | ~15 min |
-| 6 | Build EPUB + DOCX | sequenziale | ~5 min |
+| 1 | Front matter + ch. 1-3 | 4 | ~10 min |
+| 2 | Ch. 4-7 | 4 | ~15 min |
+| 3 | Ch. 8-11 | 4 | ~20 min |
+| 4 | Ch. 12-15 | 4 | ~20 min |
+| 5 | Ch. 16 + appendices A+B + C+D+E | 3 | ~15 min |
+| 6 | Build EPUB + DOCX | sequential | ~5 min |
 
-**Totale**: ~85 min per 98k parole IT → EN.
+**Total**: ~85 min for 98k words IT → EN.
 
 ---
 
-## Cose da tradurre (e cose da NON tradurre)
+## What to translate (and what NOT to translate)
 
-### Tradurre
+### Translate
 
-- Tutto il testo prosa
-- Headings di sezione: "Premessa" → "Setting the stage"
+- All prose text
+- Section headings: "Premessa" → "Setting the stage"
 - Box labels: "Cosa imparerai" → "What you'll learn", "Suggerimento" → "Tip", etc.
-- Caption figure: "Figura 1.1: ..." → "Figure 1.1: ..."
+- Figure captions: "Figura 1.1: ..." → "Figure 1.1: ..."
 - Cross-references: "Cap. 8" → "Chapter 8", "Parte V" → "Part V"
-- Italian prompts inside code blocks (es. "Leggi il file e dimmi..." → "Read the file and tell me...")
-- Currency: €/$ secondo target market
-- Titoli e descrizioni KDP
+- Italian prompts inside code blocks (e.g., "Leggi il file e dimmi..." → "Read the file and tell me...")
+- Currency: €/$ according to target market
+- KDP titles and descriptions
 
-### NON tradurre
+### Do NOT translate
 
-- Comandi shell (`npm install`, `git commit`, `claude /help`, ecc.)
-- Nomi di file e path (`src/index.js`, `package.json`, ecc.)
-- Identificatori di codice (variabili, funzioni)
-- Nomi prodotti (`Claude Code`, `Anthropic`, `Photogallery`, `Fluent AI Pro`, `NestJS`, etc.)
-- Image refs (path `figures/cap-NN/...` resta uguale)
+- Shell commands (`npm install`, `git commit`, `claude /help`, etc.)
+- File names and paths (`src/index.js`, `package.json`, etc.)
+- Code identifiers (variables, functions)
+- Product names (`Claude Code`, `Anthropic`, `Photogallery`, `Fluent AI Pro`, `NestJS`, etc.)
+- Image refs (path `figures/cap-NN/...` stays the same)
 - Pandoc fenced div classes (`::: {.chapter-opener}`)
 
 ---
 
-## Convenzioni per coppie IT/EN
+## Conventions for IT/EN pairs
 
 | Italiano | American English |
 |---|---|
@@ -122,11 +122,11 @@ Wave tipico per 16 capitoli + front matter + 5 appendici:
 | 📝 Esempio | 📝 Example |
 | 🔁 Prompt riusabile | 🔁 Reusable prompt |
 
-Memorizza questa tabella nel prompt template e i traduttori saranno consistent.
+Memorize this table in the prompt template and your translators will stay consistent.
 
 ---
 
-## Build separato per edizione
+## Separate build per edition
 
 ```bash
 # IT
@@ -140,63 +140,63 @@ cd ../book-en
 ./scripts/validate.sh
 ```
 
-I due EPUB sono indipendenti. Ognuno ha proprio metadata, proprio TOC, propria descrizione.
+The two EPUBs are independent. Each has its own metadata, its own TOC, its own description.
 
 ---
 
-## KDP: 2 ASIN separati
+## KDP: 2 separate ASINs
 
-Amazon richiede un ASIN diverso per ogni lingua. Conseguenze:
+Amazon requires a different ASIN for each language. Consequences:
 
-- ❌ NON puoi caricare due lingue sotto un singolo prodotto
-- ✅ Crea 2 listing separati con stessa cover (testo localizzato)
-- ✅ Linka i due ASIN via "Other formats" nella product page
-- ✅ Pricing indipendente per ogni edizione
+- ❌ You CANNOT upload two languages under a single product
+- ✅ Create 2 separate listings with the same cover (localized text)
+- ✅ Link the two ASINs via "Other formats" on the product page
+- ✅ Independent pricing for each edition
 
-### Recensioni separate
+### Separate reviews
 
-Le recensioni su Amazon.it (IT edition) non appaiono su Amazon.com (EN edition) e viceversa. È un disincentivo a tradurre se hai già 100 recensioni 5★ in IT — ma è anche un'opportunità di "ripartire pulito" sul mercato EN dove magari ti reposizioni.
+Reviews on Amazon.it (IT edition) do not appear on Amazon.com (EN edition) and vice versa. This is a disincentive to translate if you already have 100 five-star reviews in Italian — but it's also an opportunity to "start fresh" in the EN market where you might reposition yourself.
 
 ### Author Central
 
-Amazon.com (US/UK) e Amazon.it (IT) hanno **due Author Central separati**. Configura entrambi con bio nelle lingue native.
+Amazon.com (US/UK) and Amazon.it (IT) have **two separate Author Central accounts**. Configure both with bios in the native languages.
 
 ---
 
-## Discrepanze culturali
+## Cultural discrepancies
 
-Adatta, non solo traduci:
+Adapt, don't just translate:
 
-- **Currency**: usa $ per US, € per IT/EU, £ per UK
-- **Date format**: ISO 2026-05-18 funziona universalmente; evita MM/DD/YYYY (US) vs DD/MM/YYYY (IT)
-- **Esempi business**: nomi di aziende reali → usa quelle riconosciute dal target market (es. "Spryker" è noto in DACH/IT enterprise, meno in US — sostituisci con "Shopify" o "Stripe" per US)
-- **Pricing**: $9.99 (US) ≠ €9.99 (IT) ≠ £8.99 (UK). KDP gestisce conversion automatic ma settare a mano dà royalty migliori
+- **Currency**: use $ for US, € for IT/EU, £ for UK
+- **Date format**: ISO 2026-05-18 works universally; avoid MM/DD/YYYY (US) vs DD/MM/YYYY (IT)
+- **Business examples**: real company names → use ones recognized by the target market (e.g., "Spryker" is well known in DACH/IT enterprise, less so in the US — replace with "Shopify" or "Stripe" for US)
+- **Pricing**: $9.99 (US) ≠ €9.99 (IT) ≠ £8.99 (UK). KDP handles conversion automatically but setting prices manually gives better royalties
 - **Idioms**: "menare il can per l'aia" → "beat around the bush", "fare i conti con" → "deal with"
 
 ---
 
-## Quando vale la pena tradurre
+## When translation is worth it
 
-Tradurre 98k parole costa:
+Translating 98k words costs:
 - ~$30-50 in API calls (Sonnet)
-- ~15-30 ore di review umana (per produzione qualità)
-- ~$200-400 per native editor pass (raccomandato per EN)
+- ~15-30 hours of human review (for production quality)
+- ~$200-400 for a native editor pass (recommended for EN)
 
-**ROI tipico**:
-- Mercato IT: 10-30 copie/mese → €70-200 royalty
-- Mercato US: 30-100 copie/mese → $200-700 royalty
-- Mercato UK: 10-30 copie/mese → £60-180 royalty
+**Typical ROI**:
+- IT market: 10-30 copies/month → €70-200 royalty
+- US market: 30-100 copies/month → $200-700 royalty
+- UK market: 10-30 copies/month → £60-180 royalty
 
-In un anno di vendite la sola edizione US ripaga di gran lunga il costo di traduzione.
+Over a year of sales, the US edition alone will more than cover the cost of translation.
 
-**NON tradurre** se:
-- Audience è esclusivamente di nicchia in 1 lingua
-- Il contenuto è troppo localizzato (es. tax/legal per IT)
-- Manca tempo per gestire 2 author profiles, 2 review streams, 2 KDP pages
+**Do NOT translate** if:
+- Your audience is exclusively niche in 1 language
+- The content is too localized (e.g., tax/legal for IT)
+- You don't have time to manage 2 author profiles, 2 review streams, 2 KDP pages
 
 ---
 
-## Vedi anche
+## See also
 
-- `templates/prompts/translate-chapter.md` — prompt template per traduzione
+- `templates/prompts/translate-chapter.md` — prompt template for translation
 - `docs/04-build-and-publish.md` — KDP setup

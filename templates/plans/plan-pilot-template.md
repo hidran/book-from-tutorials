@@ -1,116 +1,116 @@
 # Plan template: Pilot Pipeline (Plan 1)
 
-Template del primo piano di esecuzione: bootstrap del libro + capitolo pilota end-to-end. Adattalo al tuo libro.
+Template of the first execution plan: book bootstrap + end-to-end pilot chapter. Adapt it to your book.
 
 ---
 
-## Obiettivo del piano
+## Plan objective
 
-Validare la pipeline (markdown → EPUB validato) producendo UN capitolo pilota completo.
+Validate the pipeline (markdown → validated EPUB) by producing ONE complete pilot chapter.
 
-Tempo stimato: **~10-12h**.
+Estimated time: **~10-12h**.
 
 Output:
-- `book/` con struttura completa
-- 1 capitolo (Cap. 1) scritto e con 4 figure
-- EPUB validato da `epubcheck`
+- `book/` with complete structure
+- 1 chapter (Ch. 1) written with 4 figures
+- EPUB validated by `epubcheck`
 - DOCX paperback first draft
-- QA visiva su Kindle Previewer 3
+- Visual QA on Kindle Previewer 3
 
 ---
 
 ## Task
 
-### Task 1 — Bootstrap struttura `book/` (30 min)
-- Crea cartelle `manuscript/{00-front-matter, parte-1, ..., zz-back-matter}`, `figures/`, `styles/`, `scripts/`, `build/`
+### Task 1 — Bootstrap the `book/` structure (30 min)
+- Create folders `manuscript/{00-front-matter, part-1, ..., zz-back-matter}`, `figures/`, `styles/`, `scripts/`, `build/`
 - `.gitignore` (exclude `build/`, `figures/raw/`, `node_modules/`)
 - `README.md` (skeleton)
-- `git init` (Dropbox-safe se applicabile: `xattr -w com.dropbox.ignored 1 .git`)
+- `git init` (Dropbox-safe if applicable: `xattr -w com.dropbox.ignored 1 .git`)
 - Commit: `chore: bootstrap book directory structure`
 
 ### Task 2 — Toolchain (15 min)
-- Verifica/installa: pandoc 3.x, ffmpeg, epubcheck
-- Manual: installa Kindle Previewer 3 da Amazon
-- Documenta versioni in `scripts/TOOLCHAIN.md`
+- Verify/install: pandoc 3.x, ffmpeg, epubcheck
+- Manual: install Kindle Previewer 3 from Amazon
+- Document versions in `scripts/TOOLCHAIN.md`
 - Commit: `docs: document required toolchain versions`
 
-### Task 3-6 — Scripts pipeline (1h)
+### Task 3-6 — Pipeline scripts (1h)
 - `scripts/extract-frames.sh` (ffmpeg wrapper)
 - `scripts/build-epub.sh` (pandoc → EPUB3)
 - `scripts/build-paperback.sh` (pandoc → DOCX)
 - `scripts/validate.sh` (epubcheck wrapper)
-- `chmod +x` su tutti
-- Commit per ognuno: `feat: add <script>`
+- `chmod +x` on all of them
+- Commit for each: `feat: add <script>`
 
-### Task 7 — Stili (45 min)
-- `styles/kindle.css` con callout, code blocks, figure, headings
-- `styles/metadata.yaml` con title, author, language, keywords
+### Task 7 — Styles (45 min)
+- `styles/kindle.css` with callout, code blocks, figure, headings
+- `styles/metadata.yaml` with title, author, language, keywords
 - Commit: `feat: add Kindle EPUB stylesheet and metadata`
 
 ### Task 8 — Front matter skeleton (30 min)
-- 5 file in `00-front-matter/`: copertina, frontespizio, copyright, prefazione stub, come-leggere stub
+- 5 files in `00-front-matter/`: cover, title page, copyright, preface stub, how-to-read stub
 - Commit: `feat: add front matter skeleton`
 
-### Task 9 — Scaffold Capitolo 1 (30 min)
-- `parte-1/cap-01.md` con anatomia: opener / intro / sezioni numerate (placeholder `<<<...>>>`) / recap / esercizio / teaser
+### Task 9 — Scaffold Chapter 1 (30 min)
+- `part-1/cap-01.md` with anatomy: opener / intro / numbered sections (placeholder `<<<...>>>`) / recap / exercise / teaser
 - Commit: `feat(cap-01): scaffold chapter 1`
 
-### Task 10 — Popolare Cap. 1 da articolo (1h)
-- Sub-task per Claude: leggi `articles/PE-01.md`, sostituisci placeholder con contenuto adattato
+### Task 10 — Populate Chapter 1 from article (1h)
+- Sub-task for Claude: read `articles/PE-01.md`, replace placeholders with adapted content
 - Word count target: 3500-5500 (intro chapter)
 - Commit: `feat(cap-01): populate chapter body from PE-01`
 
-### Task 11 — Estrarre 4 screenshot (1h)
-- Identifica timestamp nel video sorgente (manual)
+### Task 11 — Extract 4 screenshots (1h)
+- Identify timestamps in source video (manual)
 - `./scripts/extract-frames.sh videos/cap-01.mp4 figures/raw/cap-01 <ts1> <ts2> <ts3> <ts4>`
-- Visualizza candidati, seleziona migliori
-- Promuovi a `figures/cap-01/fig-NN-nome.png`
-- Inserisci `![Caption](figures/cap-01/...)` nel markdown
+- Review candidates, select the best ones
+- Promote to `figures/cap-01/fig-NN-name.png`
+- Insert `![Caption](figures/cap-01/...)` in markdown
 - Commit: `feat(cap-01): add 4 screenshots`
 
 ### Task 12 — Build EPUB + validate (15 min)
 - `./scripts/build-epub.sh`
-- `./scripts/validate.sh` → deve mostrare 0 errors / 0 warnings
-- Se errori: fix + re-build (cicli rapidi)
+- `./scripts/validate.sh` → must show 0 errors / 0 warnings
+- If errors: fix + re-build (fast cycles)
 - Commit: `build(cap-01): pilot EPUB build validated`
 
 ### Task 13 — Build DOCX paperback (10 min)
 - `./scripts/build-paperback.sh`
-- Apri `build/manuscript.docx` in Word per smoke test (NO impagination finale)
+- Open `build/manuscript.docx` in Word for smoke test (NO final layout)
 - Commit: `build(cap-01): pilot DOCX paperback build`
 
-### Task 14 — QA Kindle Previewer (manual, 15 min)
-- Apri EPUB in Kindle Previewer 3
-- Test su 3 dispositivi: Paperwhite (e-ink), Fire HD (LCD), iOS App
-- Annota problemi visuali
-- Commit (se servono fix): `fix(cap-01): apply Kindle Previewer QA findings`
+### Task 14 — QA on Kindle Previewer (manual, 15 min)
+- Open EPUB in Kindle Previewer 3
+- Test on 3 devices: Paperwhite (e-ink), Fire HD (LCD), iOS App
+- Note any visual issues
+- Commit (if fixes needed): `fix(cap-01): apply Kindle Previewer QA findings`
 
-### Task 15 — Retrospettiva (15 min)
-- Scrivi `PILOT-RETROSPECTIVE.md` con:
-  - Tempo effettivo vs stimato
-  - Cosa ha funzionato bene
-  - Cosa è stato difficile
-  - Aggiustamenti per i piani successivi
+### Task 15 — Retrospective (15 min)
+- Write `PILOT-RETROSPECTIVE.md` with:
+  - Actual time vs estimated
+  - What worked well
+  - What was difficult
+  - Adjustments for subsequent plans
 - Commit: `docs: capture pilot retrospective`
 
 ---
 
-## Criteri di "done" del Plan 1
+## Plan 1 completion criteria
 
-- [ ] EPUB valido `epubcheck` (0 errors, 0 warnings)
-- [ ] DOCX si apre correttamente in Word
-- [ ] QA Kindle Previewer passato su 3 dispositivi simulati
-- [ ] Capitolo 1 ha anatomia completa (opener / intro / sezioni / recap / esercizio / teaser)
-- [ ] 4 screenshot inseriti con caption
-- [ ] Retrospettiva scritta con dati reali
+- [ ] Valid EPUB from `epubcheck` (0 errors, 0 warnings)
+- [ ] DOCX opens correctly in Word
+- [ ] Kindle Previewer QA passed on 3 simulated devices
+- [ ] Chapter 1 has complete anatomy (opener / intro / sections / recap / exercise / teaser)
+- [ ] 4 screenshots inserted with captions
+- [ ] Retrospective written with real data
 
 ---
 
-## Prossimi piani (dopo pilota)
+## Next plans (after pilot)
 
-- **Plan 2**: capitoli 2-9 (Parti I-III) — 4 wave di subagent paralleli
-- **Plan 3**: capitoli 10-16 (Parti IV-V, cuore libro) — 4 wave
-- **Plan 4**: front matter completo + 5 appendici
-- **Plan 5**: build finale + copertina + KDP handoff
+- **Plan 2**: chapters 2-9 (Parts I-III) — 4 waves of parallel subagents
+- **Plan 3**: chapters 10-16 (Parts IV-V, core of book) — 4 waves
+- **Plan 4**: complete front matter + 5 appendices
+- **Plan 5**: final build + cover + KDP handoff
 
-Stima totale 5 piani: ~80h.
+Total estimate for 5 plans: ~80h.

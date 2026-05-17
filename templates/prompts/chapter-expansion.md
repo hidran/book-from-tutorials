@@ -1,89 +1,89 @@
-# Prompt template: Espansione capitolo sottile
+# Prompt template: Thin Chapter Expansion
 
-Quando un capitolo scritto risulta sotto-target (es. 2500 parole su target 4500), espandilo con sezioni ex-novo invece di "padding" l'esistente.
+When a written chapter comes in under-target (e.g. 2500 words against a 4500-word target), expand it with fresh sections instead of padding the existing content.
 
 ---
 
-## Variabili
+## Variables
 
-- `<CHAPTER_PATH>` — file capitolo da espandere
-- `<CURRENT_WORDS>` — word count attuale
-- `<TARGET_WORDS>` — target da raggiungere
-- `<MISSING_TOPICS>` — lista topic che mancano nel capitolo
+- `<CHAPTER_PATH>` — chapter file to expand
+- `<CURRENT_WORDS>` — current word count
+- `<TARGET_WORDS>` — target to reach
+- `<MISSING_TOPICS>` — list of topics missing from the chapter
 
 ---
 
 ## Prompt
 
 ```
-Espandi il Capitolo in <CHAPTER_PATH> da <CURRENT_WORDS> a ~<TARGET_WORDS> parole
-aggiungendo sezioni ex-novo.
+Expand the chapter at <CHAPTER_PATH> from <CURRENT_WORDS> to ~<TARGET_WORDS> words
+by adding brand-new sections.
 
-## Regole
+## Rules
 
 - DO NOT commit.
-- DO NOT toccare file ad eccezione di <CHAPTER_PATH>.
-- Preserva intatta la struttura esistente: opener, premessa, sezioni numerate esistenti,
-  recap, esercizio, teaser prossimo capitolo.
-- Aggiungi NUOVE sezioni numerate (es. se cap ha 1.1-1.3, aggiungi 1.4, 1.5, 1.6
-  ed eventualmente sposta la sezione "Roadmap" a 1.7).
+- DO NOT touch any file except <CHAPTER_PATH>.
+- Preserve the existing structure intact: opener, setting-the-stage section, existing numbered
+  sections, recap, exercise, next-chapter teaser.
+- Add NEW numbered sections (e.g. if the chapter has 1.1–1.3, add 1.4, 1.5, 1.6
+  and optionally move the "Roadmap" section to 1.7).
 
-## Topic da coprire nelle nuove sezioni
+## Topics to cover in the new sections
 
 <MISSING_TOPICS>
 
-Esempi tipici di topic "ex-novo" che funzionano:
-- Sezione "Troubleshooting" dentro un capitolo Installazione/Setup
-- Sezione "Setup ottimale dell'ambiente" con consigli su terminale, shell, dotfiles
-- Sezione "Walkthrough guidato" con un mini-esempio end-to-end
-- Sezione "Confronto con alternative" che colloca il tool in contesto
-- Sezione "Pattern avanzati" che aggiunge profondità
-- Sezione "Pricing/costi" se rilevante
-- Sezione "Pitfalls comuni" con 3-5 errori e fix
+Typical examples of fresh topics that work well:
+- "Troubleshooting" section inside an Installation/Setup chapter
+- "Optimal environment setup" section with terminal, shell, dotfile tips
+- "Guided walkthrough" section with a mini end-to-end example
+- "Comparison with alternatives" section placing the tool in context
+- "Advanced patterns" section adding depth
+- "Pricing/costs" section if relevant
+- "Common pitfalls" section with 3–5 mistakes and fixes
 
-## Vincoli stilistici
+## Style constraints
 
-- Stesso tono e voce delle sezioni esistenti
-- Numerazione coerente
-- Aggiungi 1-2 placeholder <!-- FIGURE: ... --> nelle nuove sezioni se servono
-- Aggiungi 1 callout box per sezione nuova (es. ::: {.callout .callout-tip})
-- Aggiorna il box "Cosa imparerai" all'inizio aggiungendo i nuovi outcome
+- Same tone and voice as the existing sections
+- Consistent numbering
+- Add 1–2 placeholders <!-- FIGURE: ... --> in the new sections where needed
+- Add 1 callout box per new section (e.g. ::: {.callout .callout-tip})
+- Update the "What you'll learn" box at the top to include the new outcomes
 
 ## Status report
 
-End con:
+End with:
 DONE | DONE_WITH_CONCERNS | NEEDS_CONTEXT | BLOCKED
 
-Poi:
-1. Word count finale (e delta vs prima)
-2. Nuove sezioni H2 aggiunte (con titoli)
-3. Numero placeholder <!-- FIGURE: ... --> aggiunti
-4. Conferma no git ops
-5. Eventuali topic che NON sei riuscito a coprire (e perché)
+Then:
+1. Final word count (and delta vs. before)
+2. New H2 sections added (with titles)
+3. Number of <!-- FIGURE: ... --> placeholders added
+4. Confirmation of no git ops
+5. Any topics you were unable to cover (and why)
 ```
 
 ---
 
-## Esempio reale
+## Real-world example
 
-Nel libro Claude Code originale, il Cap. 1 venne fuori a 2508 parole (target era 4500). Espansione applicata:
+In the original Claude Code book, Chapter 1 came out at 2508 words (target was 4500). Expansion applied:
 
-- **§ 1.2.1 Troubleshooting installazione** (~500 words) — EACCES, PATH, Apple Silicon, WSL
-- **§ 1.4 Setup ottimale dell'ambiente** (~700 words) — iTerm2/Warp, zsh/fish, Starship, alias
-- **§ 1.5 Il tuo primo prompt guidato** (~800 words) — walkthrough end-to-end argparse
+- **§ 1.2.1 Installation troubleshooting** (~500 words) — EACCES, PATH, Apple Silicon, WSL
+- **§ 1.4 Optimal environment setup** (~700 words) — iTerm2/Warp, zsh/fish, Starship, aliases
+- **§ 1.5 Your first guided prompt** (~800 words) — end-to-end argparse walkthrough
 
-Risultato: 2508 → 4744 parole (~18-20 pagine, dentro target).
+Result: 2508 → 4744 words (~18–20 pages, within target).
 
-Tempo: ~15 minuti per espansione + 1 build cycle.
+Time: ~15 minutes for expansion + 1 build cycle.
 
 ---
 
-## Quando NON espandere
+## When NOT to expand
 
-Se l'articolo sorgente è davvero sottile e il capitolo è genuinamente breve (es. cap. intro di poche pagine), **accetta la lunghezza** invece di gonfiare.
+If the source article is genuinely thin and the chapter is authentically short (e.g. an intro chapter of a few pages), **accept the length** rather than inflating it.
 
-Aggiorna invece lo spec del libro con range realistici per tipologia:
-- Intro/light: 2500-3500 parole (10-14 pagine)
-- Standard: 3500-5000 (14-20 pagine)
-- Heavy: 5000-7000 (20-28 pagine)
-- Cuore libro: 7000-9000 (28-36 pagine)
+Instead, update the book spec with realistic ranges by type:
+- Intro/light: 2500–3500 words (10–14 pages)
+- Standard: 3500–5000 (14–20 pages)
+- Heavy: 5000–7000 (20–28 pages)
+- Core of book: 7000–9000 (28–36 pages)

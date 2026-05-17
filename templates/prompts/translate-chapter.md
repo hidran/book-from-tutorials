@@ -1,44 +1,44 @@
-# Prompt template: Traduzione capitolo IT → EN (o qualunque coppia)
+# Prompt template: Chapter translation (any source → target language pair)
 
-Per dispatchare subagent paralleli che traducono capitoli da una lingua all'altra.
+For dispatching parallel subagents that translate chapters from one language to another.
 
 ---
 
-## Variabili
+## Variables
 
-- `<SOURCE_LANG>` — es. "Italian"
-- `<TARGET_LANG>` — es. "American English"
-- `<SOURCE_PATH>` — es. `book/manuscript/parte-3/cap-08.md`
-- `<TARGET_PATH>` — es. `book-en/manuscript/parte-3/cap-08.md`
-- `<CHAPTER_TITLE_EN>` — titolo capitolo nella lingua target
+- `<SOURCE_LANG>` — e.g. "Italian"
+- `<TARGET_LANG>` — e.g. "American English"
+- `<SOURCE_PATH>` — e.g. `book/manuscript/part-3/ch-08.md`
+- `<TARGET_PATH>` — e.g. `book-en/manuscript/part-3/ch-08.md`
+- `<CHAPTER_TITLE_EN>` — chapter title in the target language
 
 ---
 
 ## Prompt
 
 ```
-Traduci il Capitolo da <SOURCE_PATH> in <TARGET_LANG> e salvalo in <TARGET_PATH>.
+Translate the chapter at <SOURCE_PATH> into <TARGET_LANG> and save it to <TARGET_PATH>.
 
-## Regole CRITICHE
+## CRITICAL rules
 
 - DO NOT commit.
-- DO NOT toccare alcun file ad eccezione di <TARGET_PATH>.
-- Preserva TUTTA la struttura markdown/pandoc: fenced divs ::: {.chapter-opener},
+- DO NOT touch any file except <TARGET_PATH>.
+- Preserve ALL markdown/pandoc structure: fenced divs ::: {.chapter-opener},
   callouts ::: {.callout .callout-*}, image refs ![](figures/...){#fig:N-N width=100%},
   italic captions, code blocks ```.
-- I path delle immagini restano IDENTICI (le figure sono condivise tra edizioni via symlink).
-  Traduci SOLO le caption (es. "Figura 1.1: ..." → "Figure 1.1: ...").
+- Image paths remain IDENTICAL (figures are shared between editions via symlink).
+  Translate ONLY the captions (e.g. "Figura 1.1: ..." → "Figure 1.1: ...").
 
-## Titolo capitolo nella lingua target
+## Chapter title in the target language
 
 # <CHAPTER_TITLE_EN>
 
-## Translation hints (sostituisci secondo necessità)
+## Translation hints (substitute as needed)
 
 | Source | Target |
 |---|---|
-| Premessa: [titolo] | Setting the stage: [title] |
-| [Numero].X [titolo] | [Number].X [title] |
+| Premessa: [title] | Setting the stage: [title] |
+| [Number].X [title] | [Number].X [title] |
 | Esercizio proposto | Exercise |
 | Prossimo capitolo | Next chapter |
 | Tempo stimato | Estimated time |
@@ -59,80 +59,80 @@ Traduci il Capitolo da <SOURCE_PATH> in <TARGET_LANG> e salvalo in <TARGET_PATH>
 | Prerequisiti | Prerequisites |
 | Riepilogo del capitolo | Chapter summary |
 
-## Cosa NON tradurre
+## What NOT to translate
 
-- Comandi shell (`npm install`, `git commit`, `claude /help`, ecc.)
-- Nomi di file e path (`src/index.js`, ecc.)
-- Identificatori di codice (variabili, funzioni, classi)
-- Nomi prodotti / framework (NestJS, Claude Code, Anthropic, Photogallery, ecc.)
+- Shell commands (`npm install`, `git commit`, `claude /help`, etc.)
+- File names and paths (`src/index.js`, etc.)
+- Code identifiers (variables, functions, classes)
+- Product / framework names (NestJS, Claude Code, Anthropic, etc.)
 - Pandoc fenced div classes
-- Image refs (path resta identico)
+- Image refs (path stays identical)
 
-## Cosa SÌ tradurre
+## What TO translate
 
-- Tutta la prosa
-- Commenti dentro i code blocks (se in lingua sorgente)
-- Prompt esempio dentro i code blocks (se sono istruzioni a Claude in lingua sorgente)
-- Caption delle figure
+- All prose
+- Comments inside code blocks (if in the source language)
+- Example prompts inside code blocks (if they are instructions to Claude in the source language)
+- Figure captions
 - Cross-references ("Cap. 8" → "Chapter 8")
-- Currency: € → $ per US, £ per UK
-- Date format: usa ISO 2026-05-18 (universale)
+- Currency: adapt to target market (e.g. € → $ for US, £ for UK)
+- Date format: use ISO (e.g. 2026-05-18) — universally unambiguous
 
-## Adattamenti culturali
+## Cultural adaptations
 
-- Idiomi: traduci natural, non letterale
-- Esempi business: se nomi di aziende sono troppo localizzati per il target market,
-  sostituiscili con equivalenti riconoscibili (es. "Spryker" → "Shopify" per US)
-- Currency: $9.99 per US, €9.99 per IT, £8.99 per UK
-- Misure: usa unità SI universalmente o adatta a target (oz/lb per US, kg/g per resto)
+- Idioms: translate naturally, not literally
+- Business examples: if company names are too localized for the target market,
+  replace them with recognizable equivalents (e.g. a hyper-local retailer → an equivalent well-known brand in the target region)
+- Currency: $9.99 for US, €9.99 for EU, £8.99 for UK
+- Measurements: use SI units universally, or adapt to target (oz/lb for US, kg/g elsewhere)
 
-## Tono
+## Tone
 
-- <TARGET_LANG>, seconda persona ("you")
-- Stessa voce e ritmo del sorgente
-- NON rendere "più formale" — preserva il registro originale
-- NON espandere o tagliare contenuto
+- <TARGET_LANG>, second person ("you")
+- Same voice and rhythm as the source
+- Do NOT make it "more formal" — preserve the original register
+- Do NOT expand or cut content
 
 ## Status report
 
-End con:
+End with:
 DONE | DONE_WITH_CONCERNS | NEEDS_CONTEXT | BLOCKED
 
-Poi:
-1. Word count del file scritto (e ratio vs sorgente: tipicamente EN è 5-10% più corto di IT)
-2. Conferma no git ops
-3. Conferma solo il file target è stato toccato
-4. Eventuali adattamenti culturali fatti (lista)
-5. Decisioni di traduzione non ovvie (es. "tradotto X come Y perché...")
+Then:
+1. Word count of the written file (and ratio vs. source: typically <TARGET_LANG> is 5–10% shorter than the source)
+2. Confirmation of no git ops
+3. Confirmation that only the target file was touched
+4. Any cultural adaptations made (list)
+5. Non-obvious translation decisions (e.g. "translated X as Y because...")
 ```
 
 ---
 
-## Dispatch in parallelo
+## Parallel dispatch
 
-Per tradurre 16 capitoli + front matter + 5 appendici:
+To translate 16 chapters + front matter + 5 appendices:
 
 ```
-Wave 1: 4 subagent in parallelo → front matter + cap 1 + cap 2 + cap 3
-Wave 2: 4 subagent → cap 4-7
-Wave 3: 4 subagent → cap 8-11
-Wave 4: 4 subagent → cap 12-15
-Wave 5: 4 subagent → cap 16 + appendici A + B + (C+D+E insieme)
+Wave 1: 4 subagents in parallel → front matter + ch 1 + ch 2 + ch 3
+Wave 2: 4 subagents → ch 4–7
+Wave 3: 4 subagents → ch 8–11
+Wave 4: 4 subagents → ch 12–15
+Wave 5: 4 subagents → ch 16 + appendix A + B + (C+D+E together)
 ```
 
-Tempo totale: ~85 min per 98k parole IT → EN (vs ~15h sequenziale).
+Total time: ~85 min for 98k words source → target (vs. ~15h sequential).
 
 ---
 
-## Quality check post-traduzione
+## Post-translation quality check
 
-Prima di committare:
+Before committing:
 
-1. **Build EPUB EN** e verifica `epubcheck` → 0 errori
-2. **Read random sample** (3 capitoli): traduzione fluente? Idiomi naturali?
-3. **Grep for unfinished**: cerca rimaste in lingua sorgente
+1. **Build target EPUB** and verify `epubcheck` → 0 errors
+2. **Read a random sample** (3 chapters): is the translation fluent? Are idioms natural?
+3. **Grep for unfinished**: search for words remaining in the source language
    ```bash
-   # Cerca parole italiane comuni in book-en/
+   # Search for common source-language words in the target manuscript directory
    grep -rn '\bcapitolo\b\|\bperché\b\|\busiamo\b' book-en/manuscript/ | head
    ```
-4. **Native editor pass** (opzionale ma raccomandato per pubblicazione): ~$200-400 su Reedsy/Upwork per pass su tutto il libro
+4. **Native editor pass** (optional but recommended for publication): ~$200–400 on Reedsy/Upwork for a full-book pass

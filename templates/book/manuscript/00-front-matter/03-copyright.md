@@ -1,15 +1,15 @@
 ## Copyright
 
-© [Anno] [Nome autore]. Tutti i diritti riservati.
+© [Year] [Author name]. All rights reserved.
 
-Nessuna parte di questo libro può essere riprodotta o trasmessa in alcuna forma
-o con alcun mezzo elettronico o meccanico, compresi fotocopia, registrazione o
-qualsiasi sistema di memorizzazione, senza il permesso scritto dell'autore,
-ad eccezione di brevi citazioni in recensioni critiche.
+No part of this book may be reproduced or transmitted in any form or by any means,
+electronic or mechanical, including photocopying, recording, or any information
+storage and retrieval system, without written permission from the author,
+except for brief quotations in critical reviews.
 
-I marchi citati appartengono ai rispettivi proprietari.
+Trademarks mentioned belong to their respective owners.
 
-Prima edizione: [Anno]
-ISBN: [da assegnare]
+First edition: [Year]
+ISBN: [to be assigned]
 
-Pubblicato in autoedizione tramite Amazon Kindle Direct Publishing.
+Self-published via Amazon Kindle Direct Publishing.

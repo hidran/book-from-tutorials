@@ -1,39 +1,39 @@
-# [Titolo libro] — Manuscript
+# [Book title] — Manuscript
 
-Cartella di lavoro per il libro Kindle prodotto con [book-from-tutorials](https://github.com/hidran/book-from-tutorials).
+Working folder for the Kindle book produced with [book-from-tutorials](https://github.com/hidran/book-from-tutorials).
 
 ## Build
 
 ```bash
 ./scripts/build-epub.sh        # EPUB (Kindle)
-./scripts/build-paperback.sh   # DOCX (paperback, da impaginare in Word)
+./scripts/build-paperback.sh   # DOCX (paperback, to be typeset in Word)
 ./scripts/validate.sh          # epubcheck
 ```
 
-## Struttura
+## Structure
 
-- `videos/` — video sorgente .mp4
-- `transcripts/` — trascrizioni .txt (output di Whisper / Audiate)
-- `articles/` — articoli .md (uno per video, leggibili come blog post)
-- `manuscript/` — sorgenti markdown del libro
-  - `00-front-matter/` — copertina, frontespizio, copyright, prefazione, come leggere
-  - `parte-N/cap-NN.md` — capitoli
-  - `zz-back-matter/` — appendici
-- `figures/cap-NN/` — screenshot finali (PNG)
-- `styles/` — CSS Kindle + metadata YAML pandoc
+- `videos/` — source video files .mp4
+- `transcripts/` — transcripts .txt (output from Whisper / Audiate)
+- `articles/` — articles .md (one per video, readable as blog posts)
+- `manuscript/` — markdown source files for the book
+  - `00-front-matter/` — cover, title page, copyright, preface, how to read
+  - `parte-N/cap-NN.md` — chapters
+  - `zz-back-matter/` — appendices
+- `figures/cap-NN/` — final screenshots (PNG)
+- `styles/` — Kindle CSS + pandoc YAML metadata
 - `scripts/` — pipeline scripts (extract-frames, build-epub, build-paperback, validate)
-- `build/` — output EPUB + DOCX (gitignored)
+- `build/` — EPUB + DOCX output (gitignored)
 
 ## Workflow
 
-1. Metti i video in `videos/`
-2. Trascrivi: `./scripts/transcribe-batch.sh videos/ transcripts/`
-3. Genera articoli con Claude Code (vedi prompt template)
-4. Mappa articoli → capitoli (decisione editoriale)
-5. Scrivi capitoli con subagent paralleli
-6. Estrai screenshot: `./scripts/extract-frames.sh videos/X.mp4 figures/raw/cap-NN 00:01:30 ...`
-7. Inserisci `![Caption](figures/cap-NN/...)` nei capitoli
+1. Place videos in `videos/`
+2. Transcribe: `./scripts/transcribe-batch.sh videos/ transcripts/`
+3. Generate articles with Claude Code (see prompt template)
+4. Map articles → chapters (editorial decision)
+5. Write chapters with parallel subagents
+6. Extract screenshots: `./scripts/extract-frames.sh videos/X.mp4 figures/raw/cap-NN 00:01:30 ...`
+7. Insert `![Caption](figures/cap-NN/...)` in chapters
 8. Build + validate
-9. Upload KDP
+9. Upload to KDP
 
-Vedi documentazione completa: https://github.com/hidran/book-from-tutorials
+See full documentation: https://github.com/hidran/book-from-tutorials

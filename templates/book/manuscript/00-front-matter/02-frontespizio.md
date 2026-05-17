@@ -1,7 +1,7 @@
-# [Titolo del libro]
+# [Book title]
 
-**[Sottotitolo accattivante]**
+**[Catchy subtitle]**
 
-[Nome autore]
+[Author name]
 
-Prima edizione — [Anno]
+First edition — [Year]

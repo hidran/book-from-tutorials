@@ -1,24 +1,24 @@
-## Come leggere il libro
+## How to read this book
 
-### In che ordine
+### Reading order
 
-[Suggerimenti per la lettura: lineare, mirata, salta-progetto. Spiega quando i capitoli assumono i precedenti.]
+[Suggestions for reading: linear, targeted, skip-to-project. Explain when chapters assume familiarity with previous ones.]
 
-### Convenzioni tipografiche
+### Typographic conventions
 
-- `code inline` — comandi, path, nomi di file
-- Blocchi codice multi-linea per snippet completi
-- 5 tipi di callout box:
-  - 💡 Suggerimento — trick o scorciatoia non ovvia
-  - ⚠️ Attenzione — errore comune o trabocchetto
-  - 🔧 Sotto il cofano — approfondimento opzionale (lettore avanzato)
-  - 📝 Esempio — caso d'uso concreto con input/output
-  - 🔁 Prompt riusabile — snippet di prompt copia-incollabile
+- `code inline` — commands, paths, file names
+- Multi-line code blocks for complete snippets
+- 5 types of callout box:
+  - 💡 Tip — a non-obvious trick or shortcut
+  - ⚠️ Warning — a common mistake or pitfall
+  - 🔧 Under the hood — optional deep dive (for advanced readers)
+  - 📝 Example — a concrete use case with input/output
+  - 🔁 Reusable prompt — a copy-paste-ready prompt snippet
 
-### Repo companion su GitHub
+### GitHub companion repos
 
-[Lista repo companion con descrizione breve.]
+[List of companion repos with a brief description of each.]
 
-### Aggiornamenti
+### Updates
 
-[Cadenza aggiornamenti, come segnalare errata, dove riceverli.]
+[Update cadence, how to report errata, where to receive them.]

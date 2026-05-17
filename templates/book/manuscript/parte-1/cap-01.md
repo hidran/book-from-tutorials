@@ -1,9 +1,9 @@
-# Capitolo 1 — [Titolo del capitolo]
+# Chapter 1 — [Chapter title]
 
 ::: {.chapter-opener}
-**Cosa imparerai**
+**What you'll learn**
 
-- [Outcome 1 misurabile]
+- [Measurable outcome 1]
 - [Outcome 2]
 - [Outcome 3]
 - [Outcome 4]
@@ -11,78 +11,78 @@
 :::
 
 ::: {.chapter-opener}
-**Prerequisiti**
+**Prerequisites**
 
-- [Tool / conoscenza richiesta]
-- [Altro requisito]
+- [Required tool / knowledge]
+- [Another requirement]
 :::
 
-## Premessa: [hook accattivante]
+## Setting the stage: [catchy hook]
 
-[~250-400 parole. Aggancio narrativo. Perché questo capitolo conta? Cosa è in gioco? Aneddoto, problema, opportunità.]
+[~250–400 words. Narrative hook. Why does this chapter matter? What's at stake? Anecdote, problem, opportunity.]
 
-## 1.1 [Prima sezione macro]
+## 1.1 [First main section]
 
-[Corpo dal materiale sorgente. Adatta tono per lettore del libro. Inserisci screenshot dove rilevante.]
+[Body content from source material. Adapt the tone for the book's reader. Insert screenshots where relevant.]
 
-<!-- FIGURE: descrizione di cosa serve qui -->
+<!-- FIGURE: description of what is needed here -->
 
-[Continua il corpo.]
+[Continue the body.]
 
-## 1.2 [Seconda sezione macro]
+## 1.2 [Second main section]
 
-[Corpo.]
+[Body.]
 
 ::: {.callout .callout-tip}
-**💡 [Titolo del suggerimento]**
+**💡 [Tip title]**
 
-[2-4 righe di trick non ovvio.]
+[2–4 lines about a non-obvious trick.]
 :::
 
-## 1.3 [Terza sezione macro]
+## 1.3 [Third main section]
 
-[Corpo.]
+[Body.]
 
 ::: {.callout .callout-warning}
-**⚠️ [Titolo dell'avvertenza]**
+**⚠️ [Warning title]**
 
-[2-4 righe sull'errore comune da evitare.]
+[2–4 lines about the common mistake to avoid.]
 :::
 
-## 1.4 [Quarta sezione (opzionale)]
+## 1.4 [Fourth section (optional)]
 
-[Corpo.]
+[Body.]
 
 ::: {.chapter-recap}
-**Riepilogo del capitolo**
+**Chapter summary**
 
-- [Punto chiave 1]
-- [Punto chiave 2]
-- [Punto chiave 3]
-- [Punto chiave 4]
-- [Punto chiave 5]
+- [Key point 1]
+- [Key point 2]
+- [Key point 3]
+- [Key point 4]
+- [Key point 5]
 :::
 
 ::: {.callout .callout-prompt}
-**🔁 Prompt riusabile — [Nome breve]**
+**🔁 Reusable prompt — [Short name]**
 
 ```
-[Template di prompt copia-incollabile per il lettore]
+[Copy-paste-ready prompt template for the reader]
 ```
 :::
 
-### Esercizio proposto
+### Exercise
 
-1. [Step 1 dell'esercizio]
+1. [Exercise step 1]
 2. [Step 2]
 3. [Step 3]
 4. [Step 4]
-5. [Bonus opzionale]
+5. [Optional bonus]
 
-**Tempo stimato:** [15-30] minuti.
+**Estimated time:** [15–30] minutes.
 
-**Branch GitHub di partenza:** `cap-01-exercise` (nel repo companion).
+**Starter GitHub branch:** `cap-01-exercise` (in the companion repo).
 
-### Prossimo capitolo
+### Next chapter
 
-Nel **Capitolo 2** [teaser narrativo di 2-3 righe per il prossimo argomento].
+In **Chapter 2** [narrative teaser of 2–3 lines about the next topic].

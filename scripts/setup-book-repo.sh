@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
-# Bootstrap di un nuovo libro a partire dai template.
+# Bootstrap a new book from the templates.
 #
-# Uso:
-#   ./setup-book-repo.sh <path-libro> <titolo> <autore> <lingua>
+# Usage:
+#   ./setup-book-repo.sh <book-path> <title> <author> <language>
 #
-# Esempio:
-#   ./setup-book-repo.sh ~/my-tech-book "Il mio libro tech" "Mario Rossi" it-IT
+# Example:
+#   ./setup-book-repo.sh ~/my-tech-book "My tech book" "Mario Rossi" it-IT
 #
-# Crea la struttura book/, copia gli script, scaffolda i file iniziali,
-# inizializza git (Dropbox-safe via xattr se su macOS).
+# Creates the book/ structure, copies scripts, scaffolds initial files,
+# initializes git (Dropbox-safe via xattr if on macOS).
 
 set -euo pipefail
 
 if [[ $# -lt 4 ]]; then
-  echo "Uso: $0 <path-libro> <titolo> <autore> <lingua>" >&2
-  echo "Esempio: $0 ~/my-book 'Il mio libro' 'Hidran Arias' it-IT" >&2
+  echo "Usage: $0 <book-path> <title> <author> <language>" >&2
+  echo "Example: $0 ~/my-book 'My book' 'Hidran Arias' it-IT" >&2
   exit 1
 fi
 

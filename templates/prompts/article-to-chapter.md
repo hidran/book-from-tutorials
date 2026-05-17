@@ -1,52 +1,52 @@
-# Prompt template: Articoli → Capitolo del libro
+# Prompt template: Articles → Book Chapter
 
-Copia (e adatta) questo prompt per dispatchare un subagent che scrive un capitolo a partire dagli articoli sorgente.
+Copy (and adapt) this prompt to dispatch a subagent that writes a chapter from the source articles.
 
 ---
 
-## Variabili
+## Variables
 
-- `<CHAPTER_NUM>` — numero del capitolo (es. 8)
-- `<CHAPTER_TITLE>` — titolo (es. "Skills: da custom command a capacità riusabili")
-- `<OUTPUT_PATH>` — es. `book/manuscript/parte-3/cap-08.md`
-- `<SOURCE_ARTICLES>` — lista articoli sorgente (es. `articles/PE-08.md`, `articles/WS-02.md`)
-- `<WORD_TARGET>` — range (es. "5000-6500" per heavy chapter)
-- `<LANGUAGE>` — es. "italiano"
+- `<CHAPTER_NUM>` — chapter number (e.g. 8)
+- `<CHAPTER_TITLE>` — title (e.g. "Skills: from custom command to reusable capability")
+- `<OUTPUT_PATH>` — e.g. `book/manuscript/part-3/ch-08.md`
+- `<SOURCE_ARTICLES>` — list of source articles (e.g. `articles/PE-08.md`, `articles/WS-02.md`)
+- `<WORD_TARGET>` — range (e.g. "5000-6500" for a heavy chapter)
+- `<LANGUAGE>` — e.g. "American English"
 
 ---
 
 ## Prompt
 
 ```
-Scrivi il Capitolo <CHAPTER_NUM> del libro "<TITOLO_LIBRO>" — "<CHAPTER_TITLE>".
+Write Chapter <CHAPTER_NUM> of the book "<BOOK_TITLE>" — "<CHAPTER_TITLE>".
 
-## Regole CRITICHE
+## CRITICAL rules
 
-- DO NOT commit. Solo write del file. L'orchestratore committerà.
-- DO NOT toccare file ad eccezione di <OUTPUT_PATH>.
-- <LANGUAGE>, seconda persona "tu", target sviluppatore intermedio.
-- Usa la sintassi pandoc fenced div ::: {.chapter-opener} ecc. (vedi un capitolo esistente come template)
-- Per le figure: inserisci placeholder HTML comment <!-- FIGURE: descrizione -->
-  L'orchestratore li sostituirà con vere image refs dopo.
+- DO NOT commit. Write the file only. The orchestrator will commit.
+- DO NOT touch any file except <OUTPUT_PATH>.
+- <LANGUAGE>, second person "you", target audience: intermediate developer.
+- Use pandoc fenced div syntax ::: {.chapter-opener} etc. (see an existing chapter as a template)
+- For figures: insert HTML comment placeholders <!-- FIGURE: description -->
+  The orchestrator will replace them with real image refs afterward.
 
-## Contesto
+## Context
 
-- Working directory: <PATH_LIBRO>
-- Reference template (READ first): book/manuscript/parte-1/cap-01.md
-- Articoli sorgente (READ all):
+- Working directory: <BOOK_PATH>
+- Reference template (READ first): book/manuscript/part-1/ch-01.md
+- Source articles (READ all):
 <SOURCE_ARTICLES>
 - Target word count: <WORD_TARGET>
 - Output: <OUTPUT_PATH>
 
-## Outline del capitolo (struttura ANATOMIA STANDARD)
+## Chapter outline (STANDARD ANATOMY structure)
 
 ```markdown
-# Capitolo <CHAPTER_NUM> — <CHAPTER_TITLE>
+# Chapter <CHAPTER_NUM> — <CHAPTER_TITLE>
 
 ::: {.chapter-opener}
-**Cosa imparerai**
+**What you'll learn**
 
-- [Bullet 1: outcome principale del capitolo]
+- [Bullet 1: main outcome of the chapter]
 - [Bullet 2]
 - [Bullet 3]
 - [Bullet 4]
@@ -54,28 +54,28 @@ Scrivi il Capitolo <CHAPTER_NUM> del libro "<TITOLO_LIBRO>" — "<CHAPTER_TITLE>
 :::
 
 ::: {.chapter-opener}
-**Prerequisiti**
+**Prerequisites**
 
-- Capitoli precedenti completati (specifica quali)
-- Eventuali strumenti/account richiesti
+- Previous chapters completed (specify which)
+- Any required tools/accounts
 :::
 
-## Premessa: [HOOK accattivante]
-[~300 words ex-novo. Aggancio: perché questo capitolo? Cosa è in gioco? Connessione al capitolo precedente. Anticipo del valore.]
+## Setting the stage: [compelling HOOK]
+[~300 words, written fresh. Hook: why does this chapter matter? What's at stake? Connection to the previous chapter. Preview of the value.]
 
-## <N>.1 [Prima sezione macro]
-[Dal materiale degli articoli sorgente. Adatta tono. Aggiungi 1-2 placeholder <!-- FIGURE: ... --> dove serve.]
+## <N>.1 [First macro section]
+[From the source article material. Adapt tone. Add 1–2 placeholders <!-- FIGURE: ... --> where needed.]
 
-## <N>.2 [Seconda sezione macro]
+## <N>.2 [Second macro section]
 [...]
 
 ...
 
-## <N>.<X> [Ultima sezione macro]
+## <N>.<X> [Last macro section]
 [...]
 
 ::: {.chapter-recap}
-**Riepilogo del capitolo**
+**Chapter summary**
 
 - [Bullet 1]
 - [Bullet 2]
@@ -85,68 +85,68 @@ Scrivi il Capitolo <CHAPTER_NUM> del libro "<TITOLO_LIBRO>" — "<CHAPTER_TITLE>
 :::
 
 ::: {.callout .callout-prompt}
-**🔁 Prompt riusabile — [Nome breve]**
+**🔁 Reusable prompt — [Short name]**
 
-[Template di prompt copia-incollabile]
+[Copy-pasteable prompt template]
 :::
 
-### Esercizio proposto
+### Exercise
 
-[Walkthrough 4-6 step per applicare il capitolo. Tempo stimato. Branch GitHub di partenza.]
+[Step-by-step walkthrough, 4–6 steps, to apply the chapter. Estimated time. Starter GitHub branch.]
 
-### Prossimo capitolo
+### Next chapter
 
-[Teaser narrativo di 2-3 righe per il capitolo successivo.]
+[2–3 line narrative teaser for the next chapter.]
 ```
 
-## Vincoli stilistici
+## Style constraints
 
-- Sezioni H2 numerate (<N>.1, <N>.2, ...)
-- Eventuali sotto-sezioni H3 con titolo discorsivo
-- Code blocks con tag linguaggio (es. ```bash, ```python)
-- Comandi inline in `inline code`
-- Niente emoji nel corpo (eccetto callout labels predefiniti)
+- H2 sections numbered (<N>.1, <N>.2, ...)
+- Optional H3 sub-sections with conversational titles
+- Code blocks tagged with language (e.g. ```bash, ```python)
+- Inline commands in `inline code`
+- No emoji in body text (except predefined callout labels)
 
 ## Transformations table
 
-| Da (in articoli) | A (nel libro) |
+| From (in articles) | To (in book) |
 |---|---|
-| "in questo video" / "in questa lezione" | "in questo capitolo" |
-| "come vedete qui" | rimuovi (lettore non vede) |
-| "vedremo nella prossima lezione" | "vedremo nel prossimo capitolo" |
-| "Capitolo X" (se già nel testo) | mantieni |
-| H2 "Cos'è X" (doppione del titolo capitolo) | rimuovi |
+| "in this video" / "in this lesson" | "in this chapter" |
+| "as you can see here" | remove (reader can't see) |
+| "we'll see in the next lesson" | "we'll see in the next chapter" |
+| "Chapter X" (already in text) | keep |
+| H2 "What is X" (duplicate of chapter title) | remove |
 
 ## Callout boxes
 
-Quando appropriato (max 2-3 per capitolo), aggiungi:
+When appropriate (max 2–3 per chapter), add:
 
-- ::: {.callout .callout-tip} con "**💡 [Titolo breve]**" — trick/scorciatoia non ovvia
-- ::: {.callout .callout-warning} con "**⚠️ [Titolo breve]**" — errore comune / rischio
-- ::: {.callout .callout-deep-dive} con "**🔧 [Titolo breve]**" — approfondimento avanzato
-- ::: {.callout .callout-example} con "**📝 [Titolo breve]**" — esempio concreto
+- ::: {.callout .callout-tip} with "**💡 [Short title]**" — non-obvious trick/shortcut
+- ::: {.callout .callout-warning} with "**⚠️ [Short title]**" — common mistake / risk
+- ::: {.callout .callout-deep-dive} with "**🔧 [Short title]**" — advanced deep-dive
+- ::: {.callout .callout-example} with "**📝 [Short title]**" — concrete example
 
 ## Status report
 
-End con:
+End with:
 DONE | DONE_WITH_CONCERNS | NEEDS_CONTEXT | BLOCKED
 
-Poi:
-1. Word count finale
-2. Numero placeholder <!-- FIGURE: ... -->
-3. Lista headings H2/H3
-4. Conferma "no git ops" eseguite
-5. Eventuali deviazioni dall'outline (e perché)
+Then:
+1. Final word count
+2. Number of <!-- FIGURE: ... --> placeholders
+3. List of H2/H3 headings
+4. Confirmation "no git ops" performed
+5. Any deviations from the outline (and why)
 ```
 
 ---
 
-## Note d'uso
+## Usage notes
 
-**Per heavy chapter (5000-7000 parole)**: targeta 6-8 sezioni H2 invece di 4-5.
+**For heavy chapters (5000–7000 words)**: target 6–8 H2 sections instead of 4–5.
 
-**Per intro/light chapter (2500-3500 parole)**: 3-4 sezioni H2 sono OK.
+**For intro/light chapters (2500–3500 words)**: 3–4 H2 sections are fine.
 
-**Articolo sottile?** Vedi `templates/prompts/chapter-expansion.md` per espandere ex-novo.
+**Thin source article?** See `templates/prompts/chapter-expansion.md` to expand with fresh content.
 
-**Wave parallelo**: dispatcha più subagent in parallelo, ognuno scrive un capitolo diverso. NON committare in parallelo (race condition git).
+**Parallel wave**: dispatch multiple subagents in parallel, each writing a different chapter. Do NOT commit in parallel (git race condition).

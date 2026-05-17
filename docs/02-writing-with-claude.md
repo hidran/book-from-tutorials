@@ -1,183 +1,183 @@
-# 02 · Scrivere capitoli con Claude Code
+# 02 · Writing Chapters with Claude Code
 
-Il cuore del workflow: come usare Claude Code (e i suoi subagent) per trasformare articoli grezzi in capitoli da libro.
+The heart of the workflow: how to use Claude Code (and its subagents) to turn raw articles into book chapters.
 
 ---
 
-## Anatomia di un capitolo
+## Anatomy of a chapter
 
-Ogni capitolo del libro segue una struttura ricorrente (~20-25 pagine, 4000-5000 parole tipiche):
+Every chapter in the book follows a recurring structure (~20–25 pages, typically 4,000–5,000 words):
 
 ```
 ┌─────────────────────────────────────────────────┐
-│ 1. APERTURA (1 pagina)                          │
-│    ├─ Titolo capitolo                           │
-│    ├─ Box "Cosa imparerai" (3-5 bullet)         │
-│    └─ Box "Prerequisiti"                        │
+│ 1. OPENING (1 page)                             │
+│    ├─ Chapter title                             │
+│    ├─ Box "What you'll learn" (3–5 bullets)     │
+│    └─ Box "Prerequisites"                       │
 ├─────────────────────────────────────────────────┤
-│ 2. INTRO NARRATIVA (1 pagina, ex-novo)          │
-│    Aggancio al cap. precedente + perché ora     │
+│ 2. NARRATIVE INTRO (1 page, written from scratch)│
+│    Hook to previous chapter + why now           │
 ├─────────────────────────────────────────────────┤
-│ 3. CORPO (15-20 pagine — articoli adattati)     │
-│    Sezioni H2 numerate (X.1, X.2, ...)          │
-│    con screenshot, snippet, callout             │
+│ 3. BODY (15–20 pages — adapted articles)        │
+│    Numbered H2 sections (X.1, X.2, ...)         │
+│    with screenshots, snippets, callouts         │
 ├─────────────────────────────────────────────────┤
-│ 4. RECAP (1 pagina, ex-novo)                    │
-│    Box "Riepilogo" + box "Prompt riusabile"     │
+│ 4. RECAP (1 page, written from scratch)         │
+│    "Summary" box + "Reusable prompt" box        │
 ├─────────────────────────────────────────────────┤
-│ 5. ESERCIZIO PROPOSTO (1 pagina, ex-novo)       │
-│    Compito guidato + branch GitHub di partenza  │
+│ 5. EXERCISE (1 page, written from scratch)      │
+│    Guided task + starting GitHub branch         │
 ├─────────────────────────────────────────────────┤
-│ 6. PROSSIMO CAPITOLO (½ pagina)                 │
-│    Teaser di transizione                        │
+│ 6. NEXT CHAPTER (½ page)                        │
+│    Transition teaser                            │
 └─────────────────────────────────────────────────┘
 ```
 
-I punti 2, 4, 5, 6 sono **ex-novo** (Claude li scrive da zero). Il punto 3 è l'**adattamento** degli articoli sorgente.
+Sections 2, 4, 5, and 6 are **written from scratch** (Claude writes them from zero). Section 3 is the **adaptation** of the source articles.
 
 ---
 
-## Pattern Subagent-Driven
+## Subagent-Driven Pattern
 
-Per scrivere N capitoli velocemente, usa **subagent paralleli**.
+To write N chapters quickly, use **parallel subagents**.
 
-Vincolo importante: ogni subagent scrive un file DIVERSO e NON committa. L'orchestratore committa in batch alla fine.
+Important constraint: each subagent writes a DIFFERENT file and does NOT commit. The orchestrator commits in batch at the end.
 
 ### Wave dispatcher
 
 ```bash
-# In una sessione Claude Code interattiva (oppure scripted via Claude API):
+# In an interactive Claude Code session (or scripted via Claude API):
 ```
 
 ```text
-Dispatcha 4 subagent in parallelo. Ognuno scrive UN capitolo specifico:
+Dispatch 4 subagents in parallel. Each one writes ONE specific chapter:
 
-Subagent 1: scrivi book/manuscript/parte-1/cap-02.md leggendo articles/PE-02.md
-  Target: 4000-5000 parole. Anatomia standard.
-  NON committare.
+Subagent 1: write book/manuscript/parte-1/cap-02.md by reading articles/PE-02.md
+  Target: 4000–5000 words. Standard anatomy.
+  DO NOT commit.
 
-Subagent 2: scrivi book/manuscript/parte-2/cap-03.md leggendo articles/PE-02.md (parte CSV) + articles/PE-03.md
-  Target: 4500-5500 parole.
-  NON committare.
+Subagent 2: write book/manuscript/parte-2/cap-03.md by reading articles/PE-02.md (CSV part) + articles/PE-03.md
+  Target: 4500–5500 words.
+  DO NOT commit.
 
-Subagent 3: scrivi book/manuscript/parte-2/cap-04.md leggendo articles/WS-01.md
-  Target: 3500-4500 parole.
-  NON committare.
+Subagent 3: write book/manuscript/parte-2/cap-04.md by reading articles/WS-01.md
+  Target: 3500–4500 words.
+  DO NOT commit.
 
-Subagent 4: scrivi book/manuscript/parte-2/cap-05.md leggendo articles/PE-04.md + articles/PE-09.md
-  Target: 4500-5500 parole.
-  NON committare.
+Subagent 4: write book/manuscript/parte-2/cap-05.md by reading articles/PE-04.md + articles/PE-09.md
+  Target: 4500–5500 words.
+  DO NOT commit.
 
-Dopo che tutti hanno finito, io committerò in un singolo commit "feat(plan-2): write 4 chapters".
+After all subagents finish, I will commit in a single commit "feat(plan-2): write 4 chapters".
 ```
 
-### Tempo di esecuzione
+### Execution time
 
-Per wave di 4 capitoli:
-- Sequenziale: ~20-30 min
-- Parallelo (4 subagent simultanei): ~5-10 min
+For a wave of 4 chapters:
+- Sequential: ~20–30 min
+- Parallel (4 simultaneous subagents): ~5–10 min
 
-Per 16 capitoli in 4 wave: **~30 min in parallelo** vs ~2 ore sequenziale.
+For 16 chapters across 4 waves: **~30 min in parallel** vs ~2 hours sequentially.
 
 ---
 
-## Prompt template per scrittura capitolo
+## Prompt template for chapter writing
 
-Usa `templates/prompts/article-to-chapter.md` come base. Adatta per il tuo capitolo specifico.
+Use `templates/prompts/article-to-chapter.md` as your base. Adapt it for your specific chapter.
 
-Elementi chiave del prompt:
+Key elements of the prompt:
 
-1. **Critical rules**: DO NOT commit, file path target esplicito
-2. **Sources**: lista articoli da leggere con path completi
-3. **Target word count**: con range realistico per tipo di capitolo
-4. **Outline obbligatorio**: opener + premessa + N sezioni numerate + recap + esercizio + teaser
-5. **Translation table**: come adattare "in questa lezione/video" → "in questo capitolo"
-6. **Callout labels**: 💡 Suggerimento, ⚠️ Attenzione, 🔁 Prompt riusabile
-7. **Code blocks**: preservare snippet di codice intatti
+1. **Critical rules**: DO NOT commit, explicit target file path
+2. **Sources**: list of articles to read with full paths
+3. **Target word count**: with a realistic range for the chapter type
+4. **Required outline**: opener + premise + N numbered sections + recap + exercise + teaser
+5. **Translation table**: how to adapt "in this lesson/video" → "in this chapter"
+6. **Callout labels**: 💡 Tip, ⚠️ Warning, 🔁 Reusable prompt
+7. **Code blocks**: preserve code snippets intact
 8. **Status reporting**: format DONE | DONE_WITH_CONCERNS | NEEDS_CONTEXT | BLOCKED
 
 ---
 
-## Gestione articoli "sottili"
+## Handling "thin" articles
 
-Problema reale: alcuni articoli sorgente sono 1300-1500 parole. Per un capitolo da 4500 parole, mancano ~3000 parole.
+Real problem: some source articles are 1,300–1,500 words. For a 4,500-word chapter, you're missing ~3,000 words.
 
-**Strategie:**
+**Strategies:**
 
-1. **Espansione ex-novo** (raccomandato per cap. intro)
-   - Aggiungi sezioni che l'articolo non copre: troubleshooting, setup ottimale, walkthrough guidato
-   - Usa il prompt `templates/prompts/chapter-expansion.md`
-   - Tipico: aggiungi 3 sezioni × 600 parole = +1800 parole
+1. **From-scratch expansion** (recommended for intro chapters)
+   - Add sections the article doesn't cover: troubleshooting, optimal setup, guided walkthrough
+   - Use the prompt `templates/prompts/chapter-expansion.md`
+   - Typical result: add 3 sections × 600 words = +1,800 words
 
-2. **Fusione di articoli adiacenti**
-   - Es. cap-02 = PE-02 (parte generale) + PE-03 (parte introduttiva)
-   - Riduce # capitoli ma li rende più ricchi
+2. **Merging adjacent articles**
+   - e.g., cap-02 = PE-02 (general part) + PE-03 (introductory part)
+   - Reduces the number of chapters but makes each one richer
 
-3. **Accetta capitoli più corti**
-   - Aggiorna lo spec con range realistici per tipologia:
-     - Intro/light: 2500-3500 parole (10-14 pagine)
-     - Standard: 3500-5000 (14-20 pagine)
-     - Heavy: 5000-7000 (20-28 pagine)
-     - Cuore libro: 7000-9000 (28-36 pagine)
-
----
-
-## Iterazione: cosa fare se un capitolo non convince
-
-Pattern visto nel libro originale: Cap. 1 venne fuori a 2500 parole (target era 4500), il lettore di prova chiese "solo 11 pagine?".
-
-Soluzione applicata:
-1. Identificato: PE-01 era sottile, mancavano sezioni Installazione + Setup ambiente + Primo prompt guidato
-2. Aggiunte 3 sezioni nuove (~2000 parole) con un singolo prompt al subagent
-3. Re-build + QA Kindle Previewer → 18-20 pagine
-4. ✓ accettato
-
-Tempo: ~15 minuti per espansione, +1 build cycle.
-
-Lezione: **iterare in fretta**, non aspettare di avere "il piano perfetto".
+3. **Accept shorter chapters**
+   - Update the spec with realistic ranges by chapter type:
+     - Intro/light: 2,500–3,500 words (10–14 pages)
+     - Standard: 3,500–5,000 (14–20 pages)
+     - Heavy: 5,000–7,000 (20–28 pages)
+     - Core of the book: 7,000–9,000 (28–36 pages)
 
 ---
 
-## Tono e voce
+## Iteration: what to do when a chapter falls short
 
-Calibra il prompt iniziale per il tono che vuoi:
+Pattern seen in the original book: Chapter 1 came out at 2,500 words (target was 4,500), and the test reader asked "only 11 pages?".
 
-| Tono | Quando | Esempio prompt |
+Solution applied:
+1. Identified: PE-01 was thin, missing sections on Installation + Environment setup + Guided first prompt
+2. Added 3 new sections (~2,000 words) with a single prompt to the subagent
+3. Re-build + QA Kindle Previewer → 18–20 pages
+4. ✓ accepted
+
+Time: ~15 minutes for expansion, +1 build cycle.
+
+Lesson: **iterate fast**, don't wait until you have "the perfect plan".
+
+---
+
+## Tone and voice
+
+Calibrate the initial prompt for the tone you want:
+
+| Tone | When | Example prompt |
 |---|---|---|
-| Diretto, seconda persona | Tutorial tech intermediate | "Italiano, seconda persona 'tu', sviluppatore intermedio" |
-| Più formale, terza persona | Manuale enterprise | "Italiano formale, terza persona, professionista" |
-| Casual, prima persona inclusiva | Self-help, opinione | "Italiano, mix prima/seconda persona, conversazionale" |
+| Direct, second person | Intermediate tech tutorial | "American English, second person 'you', intermediate developer" |
+| More formal, third person | Enterprise manual | "Formal English, third person, professional audience" |
+| Casual, inclusive first person | Self-help, opinion | "English, mix of first/second person, conversational" |
 
-Nel libro Claude Code abbiamo usato il primo. Mantenere coerenza è critico: se in cap. 3 cambi tono, il lettore lo sente.
-
----
-
-## Anti-pattern da evitare
-
-- ❌ **Commit per ogni capitolo da subagent in parallelo** → race condition git
-- ❌ **Subagent legge "tutto il progetto"** → tokens sprecati, allucinazioni
-- ❌ **Prompt senza word count target** → capitoli incoerenti per dimensione
-- ❌ **Saltare il "no fai" nel prompt** ("non scrivere codice di esempio inventato") → invenzioni di stack che non esistono
-- ❌ **Validare solo a fine produzione** → bug pandoc scoperti a fine 16 capitoli
-- ✅ **Validare cumulativo dopo ogni wave** → fix immediati
+In the Claude Code book we used the first option. Maintaining consistency is critical: if you shift tone in chapter 3, readers will feel it.
 
 ---
 
-## Approvazione umana
+## Anti-patterns to avoid
 
-L'AI scrive. **Tu** decidi se va bene. Punti di review obbligatori:
-
-1. **Dopo il primo capitolo pilota** → verifica anatomia + tono
-2. **Dopo ogni wave di scrittura** → leggi i capitoli generati, segnala problemi
-3. **Prima del build finale** → cumulative read
-4. **Dopo QA Kindle Previewer** → leggi su dispositivo simulato
-
-Non saltare questi checkpoint per "andare più veloce". Il costo di un libro scritto male è recensioni a 1 stella per la vita.
+- ❌ **Commit per chapter from parallel subagents** → git race condition
+- ❌ **Subagent reads "the entire project"** → wasted tokens, hallucinations
+- ❌ **Prompt without a word count target** → inconsistent chapter lengths
+- ❌ **Skipping the "do not" rules in the prompt** ("do not write invented example code") → fabricated stacks that don't exist
+- ❌ **Validating only at end of production** → pandoc bugs discovered after 16 chapters
+- ✅ **Cumulative validation after each wave** → immediate fixes
 
 ---
 
-## Vedi anche
+## Human approval
 
-- `templates/prompts/article-to-chapter.md` — prompt template completo
-- `templates/prompts/chapter-expansion.md` — prompt per estendere capitoli sottili
-- `templates/prompts/translate-chapter.md` — prompt per traduzione IT → EN
+The AI writes. **You** decide whether it's good. Mandatory review checkpoints:
+
+1. **After the first pilot chapter** → verify anatomy + tone
+2. **After each writing wave** → read the generated chapters, flag issues
+3. **Before the final build** → cumulative read
+4. **After QA Kindle Previewer** → read on a simulated device
+
+Don't skip these checkpoints to "go faster". The cost of a poorly written book is one-star reviews for life.
+
+---
+
+## See also
+
+- `templates/prompts/article-to-chapter.md` — complete prompt template
+- `templates/prompts/chapter-expansion.md` — prompt for expanding thin chapters
+- `templates/prompts/translate-chapter.md` — prompt for IT → EN translation

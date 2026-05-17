@@ -1,43 +1,43 @@
-# 03 · Screenshot dai video
+# 03 · Screenshots from Videos
 
-Pipeline ffmpeg per estrarre figure dai video tutorial, selezione visiva, e applicazione nel manuscript.
-
----
-
-## Strategia di estrazione
-
-Per ogni capitolo serve 2-5 screenshot che illustrino i momenti chiave.
-
-**Approccio efficiente** (vs guess-and-check):
-
-1. Estrai 4-6 frame candidati a **timestamp evenly-spaced** (20%, 45%, 70%, 90% della durata)
-2. Visualizza tutti i candidati
-3. Seleziona i 2-4 migliori
-4. Se nessuno funziona: ri-estrai a timestamp diversi
-
-Questo è 5-10x più veloce di "individuo l'esatto frame voluto" perché spesso il frame ideale è vicino a quello evenly-spaced.
+ffmpeg pipeline for extracting figures from tutorial videos, visual selection, and applying them in the manuscript.
 
 ---
 
-## Script extract-frames.sh
+## Extraction strategy
+
+Each chapter needs 2–5 screenshots illustrating the key moments.
+
+**Efficient approach** (vs. guess-and-check):
+
+1. Extract 4–6 candidate frames at **evenly-spaced timestamps** (20%, 45%, 70%, 90% of the duration)
+2. View all candidates
+3. Select the 2–4 best ones
+4. If none work: re-extract at different timestamps
+
+This is 5–10x faster than "find the exact frame I want" because the ideal frame is usually close to the evenly-spaced one.
+
+---
+
+## The extract-frames.sh script
 
 ```bash
 ./scripts/extract-frames.sh <video.mp4> <output_dir> <ts1> [ts2 ...]
 ```
 
-Esempio:
+Example:
 
 ```bash
 ./scripts/extract-frames.sh videos/cap-01-intro.mp4 figures/raw/cap-01 \
   00:01:30 00:05:00 00:09:30 00:13:30
 ```
 
-Genera `frame_001.png`, `frame_002.png`, ecc. in `figures/raw/cap-01/`. Risoluzione preservata dal sorgente. Qualità massima (`-q:v 2`).
+Generates `frame_001.png`, `frame_002.png`, etc. in `figures/raw/cap-01/`. Resolution is preserved from the source. Maximum quality (`-q:v 2`).
 
-### Batch su tutti i capitoli
+### Batch across all chapters
 
 ```bash
-# Loop per estrarre 4 frame da N video, mappati a N capitoli
+# Loop to extract 4 frames from N videos, mapped to N chapters
 for n in 01 02 03 04 05; do
   video="videos/cap-$n.mp4"
   [ -f "$video" ] || continue
@@ -55,76 +55,76 @@ done
 
 ---
 
-## Selezione visiva
+## Visual selection
 
-Apri i PNG candidati e scegli i migliori. Criteri:
+Open the candidate PNGs and pick the best ones. Criteria:
 
-- ✅ **Contenuto leggibile**: testo terminale chiaro, non sfocato, non in transizione
-- ✅ **Significativo**: mostra un momento chiave del workflow (es. output di un comando, configurazione, errore)
-- ✅ **Self-contained**: comprensibile senza dover vedere il video
-- ❌ **Vuoto / quasi vuoto**: terminale appena aperto, schermata di caricamento
-- ❌ **Duplicato**: due frame quasi identici → tieni solo 1
-- ❌ **Cursore in posizione strana**: copre informazioni
+- ✅ **Readable content**: clear terminal text, not blurry, not mid-transition
+- ✅ **Meaningful**: shows a key moment in the workflow (e.g., command output, configuration, error)
+- ✅ **Self-contained**: understandable without watching the video
+- ❌ **Empty / nearly empty**: freshly opened terminal, loading screen
+- ❌ **Duplicate**: two nearly identical frames → keep only 1
+- ❌ **Cursor in an odd position**: covers information
 
 ---
 
-## Convenzione di naming
+## Naming convention
 
-Promuovi i frame selezionati con nomi descrittivi:
+Promote selected frames with descriptive names:
 
 ```bash
-# Da: figures/raw/cap-01/frame_003.png (timestamp 00:09:30)
-# A:   figures/cap-01/fig-01-welcome-screen.png
+# From: figures/raw/cap-01/frame_003.png (timestamp 00:09:30)
+# To:   figures/cap-01/fig-01-welcome-screen.png
 
 cp figures/raw/cap-01/frame_003.png figures/cap-01/fig-01-welcome-screen.png
 cp figures/raw/cap-01/frame_004.png figures/cap-01/fig-02-help-menu.png
 
-# Cleanup raw dopo conferma
+# Clean up raw files after confirming
 rm -rf figures/raw/cap-01
 ```
 
-Formato nome consigliato: `fig-NN-descrizione-breve.png`
-- `NN` = numero progressivo nel capitolo (01, 02, ...)
-- `descrizione-breve` = kebab-case, max 30 caratteri
+Recommended filename format: `fig-NN-short-description.png`
+- `NN` = sequential number within the chapter (01, 02, ...)
+- `short-description` = kebab-case, max 30 characters
 
 ---
 
-## Apply nei capitoli
+## Apply in chapters
 
-I capitoli scritti hanno placeholder `<!-- FIGURE: descrizione -->`. Sostituiscili con:
+Written chapters have `<!-- FIGURE: description -->` placeholders. Replace them with:
 
 ```markdown
-![Schermata di benvenuto Claude Code con il modello attivo e la cartella corrente.](figures/cap-01/fig-01-welcome-screen.png){#fig:1-1 width=100%}
+![Claude Code welcome screen showing the active model and current folder.](figures/cap-01/fig-01-welcome-screen.png){#fig:1-1 width=100%}
 
-*Figura 1.1: appena lanci `claude` vedi modello attivo, organizzazione, e progetto corrente.*
+*Figure 1.1: when you launch `claude` you see the active model, organization, and current project.*
 ```
 
-**Path note**: usa path relativi a `book/` (es. `figures/cap-NN/...`), MAI relativi al file `.md` (es. NO `../../figures/...`). Il build script di pandoc passa `--resource-path=.:manuscript:figures` per risolvere.
+**Path note**: use paths relative to `book/` (e.g., `figures/cap-NN/...`), NEVER relative to the `.md` file (e.g., NO `../../figures/...`). The pandoc build script passes `--resource-path=.:manuscript:figures` to resolve them.
 
 ### Batch apply via subagent
 
-Quando hai >10 capitoli con placeholder, dispatcha un subagent:
+When you have more than 10 chapters with placeholders, dispatch a subagent:
 
 ```text
-Per ogni capitolo da cap-02 a cap-16, trova i placeholder <!-- FIGURE: ... -->
-nel file .md e sostituiscili in ordine con le immagini disponibili in
-book/figures/cap-NN/, usando il pattern markdown standard.
+For each chapter from cap-02 to cap-16, find the <!-- FIGURE: ... --> placeholders
+in the .md file and replace them in order with the images available in
+book/figures/cap-NN/, using the standard markdown pattern.
 
-Lista figure disponibili:
-- cap-02: fig-01-claude-avviato.png
-- cap-03: fig-01-plan-attivato.png, fig-02-piano-completo.png, fig-03-verifica.png
+Available figures list:
+- cap-02: fig-01-claude-started.png
+- cap-03: fig-01-plan-activated.png, fig-02-complete-plan.png, fig-03-verification.png
 ...
 
-NON committare.
+DO NOT commit.
 ```
 
 ---
 
-## ASCII art per capitoli senza video
+## ASCII art for chapters without video
 
-Se un capitolo NON ha video sorgente disponibile (es. argomento solo testuale), genera ASCII art al posto delle screenshot.
+If a chapter has NO source video available (e.g., a text-only topic), generate ASCII art instead of screenshots.
 
-Esempio per illustrare un workflow:
+Example to illustrate a workflow:
 
 ````markdown
 ```
@@ -144,26 +144,26 @@ Esempio per illustrare un workflow:
 [Deploy]
 ```
 
-*Figura 7.2: pipeline tipica con 3 task parallelizzabili.*
+*Figure 7.2: typical pipeline with 3 parallelizable tasks.*
 ````
 
-Vantaggio: rendering perfetto anche su e-ink Kindle grayscale, file size minimo.
+Advantage: perfect rendering even on e-ink Kindle grayscale, minimal file size.
 
-Limite: solo per concetti astratti / diagrammi. Non sostituisce screenshot di UI reali.
+Limitation: only for abstract concepts / diagrams. It does not replace screenshots of real UIs.
 
 ---
 
-## Ottimizzazione per Kindle
+## Kindle optimization
 
-### Risoluzione
+### Resolution
 
-- **Minimo**: 1280×720 (HD)
-- **Raccomandato**: 1920×1080 (FullHD)
-- **Massimo utile**: 2560×1440 (oltre = file grande senza beneficio percepibile)
+- **Minimum**: 1280×720 (HD)
+- **Recommended**: 1920×1080 (Full HD)
+- **Maximum useful**: 2560×1440 (beyond this = large file with no perceptible benefit)
 
-### Compressione
+### Compression
 
-Se i PNG sono >800KB ciascuno, comprimi:
+If PNGs are larger than 800 KB each, compress them:
 
 ```bash
 # macOS: sips (built-in)
@@ -179,55 +179,55 @@ done
 mogrify -quality 80 figures/cap-*/*.png
 ```
 
-Per un libro tipico (40 figure × 300KB = 12MB), EPUB risultante 20-25MB — ben sotto il limite KDP di 650MB.
+For a typical book (40 figures × 300 KB = 12 MB), the resulting EPUB is 20–25 MB — well under KDP's 650 MB limit.
 
-### Grayscale per e-ink (opzionale)
+### Grayscale for e-ink (optional)
 
-Kindle Paperwhite mostra in grayscale. Per assicurarti che le figure siano leggibili anche lì:
+Kindle Paperwhite displays in grayscale. To make sure your figures are readable there too:
 
 ```bash
-# Test conversione + ispezione manuale
+# Test conversion + manual inspection
 for f in figures/cap-01/*.png; do
   convert "$f" -colorspace Gray "${f%.png}-gray.png"
 done
-# Apri i -gray.png — sono leggibili? Se sì, lasci le versioni colore (Kindle converte al volo).
-# Se no, valuta di aumentare contrast/saturation prima di salvare colore.
+# Open the -gray.png files — are they readable? If yes, keep the color versions (Kindle converts on the fly).
+# If not, consider increasing contrast/saturation before saving the color version.
 ```
 
 ---
 
 ## Troubleshooting
 
-### "Frame estratto è nero"
+### 'Extracted frame is black'
 
-Causa: timestamp coincide con transizione/fade. Soluzione: ri-estrai con offset ±2 secondi.
+**Cause**: the timestamp coincides with a transition/fade. **Solution**: re-extract with a ±2-second offset.
 
-### "Pandoc non trova l'immagine"
+### 'Pandoc can't find the image'
 
-Errore tipo: `[WARNING] Could not fetch resource ../../figures/cap-01/fig-01.png`
+Error message: `[WARNING] Could not fetch resource ../../figures/cap-01/fig-01.png`
 
-Causa: path nel markdown `../../figures/...` non risolto da pandoc.
+**Cause**: the path in the markdown (`../../figures/...`) is not resolved by pandoc.
 
-Soluzione: cambia in `figures/cap-01/fig-01.png` (relativo a `book/`).
+**Solution**: change it to `figures/cap-01/fig-01.png` (relative to `book/`).
 
-### "EPUB ha errore: 'Referenced resource ... could not be found in the EPUB'"
+### 'EPUB error: "Referenced resource ... could not be found in the EPUB"'
 
-Causa: image ref nel markdown punta a file inesistente.
+**Cause**: an image reference in the markdown points to a file that does not exist.
 
-Soluzione:
+**Solution**:
 ```bash
-# Trova tutti i ref a immagini
+# Find all image references
 grep -rn '!\[.*\](figures/' book/manuscript/
 
-# Verifica esistenza di ciascuno
+# Verify each one exists
 for ref in $(grep -roh 'figures/cap-[^)]*\.png' book/manuscript/); do
-  [ -f "book/$ref" ] || echo "MANCANTE: $ref"
+  [ -f "book/$ref" ] || echo "MISSING: $ref"
 done
 ```
 
 ---
 
-## Vedi anche
+## See also
 
-- `scripts/extract-frames.sh` — il wrapper ffmpeg
-- `docs/04-build-and-publish.md` — come pandoc usa le immagini
+- `scripts/extract-frames.sh` — the ffmpeg wrapper
+- `docs/04-build-and-publish.md` — how pandoc uses images
