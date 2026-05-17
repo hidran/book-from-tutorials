@@ -1,0 +1,27 @@
+---
+title: "Claude Code: la guida pratica"
+subtitle: "Dall'installazione al deploy AWS: skills, agents, Spec Driven Development e progetti reali"
+author: "Hidran Arias"
+language: it-IT
+publisher: "Autoedizione"
+date: "2026"
+rights: "© 2026 Hidran Arias. Tutti i diritti riservati."
+description: |
+  Una guida pratica completa a Claude Code, dalla prima installazione fino al deploy
+  su AWS di un progetto reale (Photogallery con NestJS, React, MySQL). Copre skills,
+  agents, custom commands, Spec Driven Development, code review multi-LLM
+  (Claude, Gemini, Codex, Kimi) e workflow professionale per sviluppatori intermedi.
+keywords:
+  - claude code
+  - ai coding
+  - spec driven development
+  - prompt engineering
+  - intelligenza artificiale
+  - nestjs
+  - react
+  - aws
+# cover-image: cover/ebook-cover.jpg  # disabilitato per pilota — abilitare al Piano 5
+# stylesheet: gestito da --css nello script di build, non in metadata
+toc: true
+toc-depth: 2
+---

@@ -1,0 +1,22 @@
+# Build artifacts (rigenerati da scripts)
+build/
+*.epub
+*.docx
+!styles/paperback.docx
+*.pdf
+
+# Raw frame extraction (intermedi)
+figures/raw/
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Secrets
+.env
+.env.local
