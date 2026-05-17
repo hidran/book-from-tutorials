@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./scripts/*.sh:*)",
+      "Bash(bash -n *)",
+      "Bash(pandoc:*)",
+      "Bash(ffmpeg:*)",
+      "Bash(ffprobe:*)",
+      "Bash(epubcheck:*)",
+      "Bash(whisper:*)",
+      "Bash(find:*)",
+      "Bash(wc:*)",
+      "Bash(grep:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "Bash(chmod:*)",
+      "Read",
+      "Edit",
+      "Write",
+      "Glob",
+      "Grep"
+    ],
+    "deny": [
+      "Bash(rm -rf /*)",
+      "Bash(sudo:*)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(gh repo create:*)",
+      "Bash(npm install:*)",
+      "Bash(pip install:*)"
+    ]
+  },
+  "env": {
+    "TOOLKIT_NAME": "book-from-tutorials"
+  }
+}
